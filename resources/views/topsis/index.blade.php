@@ -106,9 +106,9 @@
                                             <span class="font-medium text-gray-600">{{ $h->ranking }}</span>
                                         @endif
                                     </td>
-                                    <td class="px-6 py-4 font-semibold text-gray-900">{{ $h->siswa->kode_siswa }}</td>
-                                    <td class="px-6 py-4">{{ $h->siswa->nama_siswa }}</td>
-                                    <td class="px-6 py-4">{{ $h->siswa->kelas }}</td>
+                                    <td class="px-6 py-4 font-semibold text-gray-900">{{ $h->siswa->kode_siswa ?? '-' }}</td>
+                                    <td class="px-6 py-4">{{ $h->siswa->nama_siswa ?? 'Siswa Dihapus' }}</td>
+                                    <td class="px-6 py-4">{{ $h->siswa->kelas ?? '-' }}</td>
                                     <td class="px-6 py-4 text-right font-bold text-blue-600">{{ number_format($h->nilai_preferensi, 4) }}</td>
                                     <td class="px-6 py-4 text-center">
                                         @if($h->status_rekomendasi === 'Direkomendasikan')
@@ -118,7 +118,11 @@
                                         @endif
                                     </td>
                                     <td class="px-6 py-4 text-center">
+                                        @if($h->siswa)
                                         <a href="{{ route('siswas.show', $h->siswa->id) }}" class="text-blue-600 hover:text-blue-900 font-medium">Detail</a>
+                                        @else
+                                        <span class="text-gray-400">Dihapus</span>
+                                        @endif
                                     </td>
                                 </tr>
                             @endforeach

@@ -6,7 +6,7 @@
     <div class="bg-white overflow-hidden shadow-sm sm:rounded-xl border border-gray-100">
         <div class="p-6 text-gray-900">
             <div class="flex flex-col md:flex-row justify-between items-center mb-6 gap-4">
-                <h3 class="text-xl font-bold text-gray-800">Daftar Sub Kriteria</h3>
+                <h3 class="text-xl font-bold text-gray-800">Data Penilaian</h3>
                 
                 <form action="{{ route('sub_kriteria.index') }}" method="GET" class="w-full md:w-1/3 relative">
                     <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">

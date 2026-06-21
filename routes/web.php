@@ -16,6 +16,10 @@ Route::middleware(['auth', 'role:tata_usaha'])->group(function () {
     
     Route::resource('kriteria', \App\Http\Controllers\KriteriaController::class)->only(['index', 'show', 'edit', 'update']);
     Route::resource('sub_kriteria', \App\Http\Controllers\SubKriteriaController::class)->only(['index', 'show', 'edit', 'update']);
+    
+    // Kelola User
+    Route::resource('users', \App\Http\Controllers\UserController::class)->except(['show', 'destroy']);
+    Route::patch('users/{user}/toggle-status', [\App\Http\Controllers\UserController::class, 'toggleStatus'])->name('users.toggle-status');
 });
 
 Route::middleware(['auth', 'role:kepala_sekolah'])->group(function () {

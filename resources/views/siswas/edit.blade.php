@@ -33,6 +33,12 @@
                             
                             <div class="space-y-5">
                                 <div>
+                                    <label for="nisn" class="block mb-2 text-sm font-bold text-slate-700">NISN</label>
+                                    <input type="text" id="nisn" name="nisn" value="{{ old('nisn', $siswa->nisn) }}" class="bg-white border border-slate-300 text-slate-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-3 shadow-sm transition-all" required>
+                                    @error('nisn') <p class="mt-1 text-sm text-red-600 font-medium">{{ $message }}</p> @enderror
+                                </div>
+
+                                <div>
                                     <label for="nama_siswa" class="block mb-2 text-sm font-bold text-slate-700">Nama Siswa</label>
                                     <input type="text" id="nama_siswa" name="nama_siswa" value="{{ old('nama_siswa', $siswa->nama_siswa) }}" class="bg-white border border-slate-300 text-slate-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-3 shadow-sm transition-all" required>
                                     @error('nama_siswa') <p class="mt-1 text-sm text-red-600 font-medium">{{ $message }}</p> @enderror
@@ -42,6 +48,12 @@
                                     <label for="kelas" class="block mb-2 text-sm font-bold text-slate-700">Kelas</label>
                                     <input type="text" id="kelas" name="kelas" value="{{ old('kelas', $siswa->kelas) }}" class="bg-white border border-slate-300 text-slate-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-3 shadow-sm transition-all" required>
                                     @error('kelas') <p class="mt-1 text-sm text-red-600 font-medium">{{ $message }}</p> @enderror
+                                </div>
+
+                                <div>
+                                    <label for="alamat" class="block mb-2 text-sm font-bold text-slate-700">Alamat Lengkap</label>
+                                    <textarea id="alamat" name="alamat" rows="3" class="bg-white border border-slate-300 text-slate-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-3 shadow-sm transition-all">{{ old('alamat', $siswa->alamat) }}</textarea>
+                                    @error('alamat') <p class="mt-1 text-sm text-red-600 font-medium">{{ $message }}</p> @enderror
                                 </div>
 
                                 <div>

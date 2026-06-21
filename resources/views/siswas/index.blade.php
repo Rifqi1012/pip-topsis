@@ -53,6 +53,7 @@
                     <thead class="text-xs text-gray-700 uppercase bg-gray-50 border-b">
                         <tr>
                             <th scope="col" class="px-6 py-3">Kode Siswa</th>
+                            <th scope="col" class="px-6 py-3">NISN</th>
                             <th scope="col" class="px-6 py-3">Nama Siswa</th>
                             <th scope="col" class="px-6 py-3">Kelas</th>
                             @if(Auth::user()->role === 'tata_usaha')
@@ -66,6 +67,7 @@
                         @forelse ($siswas as $siswa)
                             <tr class="bg-white border-b hover:bg-gray-50 transition-colors">
                                 <td class="px-6 py-4 font-semibold text-gray-900">{{ $siswa->kode_siswa }}</td>
+                                <td class="px-6 py-4">{{ $siswa->nisn ?? '-' }}</td>
                                 <td class="px-6 py-4">{{ $siswa->nama_siswa }}</td>
                                 <td class="px-6 py-4">{{ $siswa->kelas }}</td>
                                 @if(Auth::user()->role === 'tata_usaha')

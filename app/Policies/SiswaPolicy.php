@@ -35,7 +35,8 @@ class SiswaPolicy
 
     public function delete(User $user, Siswa $siswa): bool
     {
-        return $user->role === 'tata_usaha';
+        if ($user->role === 'tata_usaha') return true;
+        return $user->role === 'wali_kelas' && $siswa->user_id === $user->id;
     }
 
     public function restore(User $user, Siswa $siswa): bool

@@ -11,7 +11,7 @@ class Siswa extends Model
     use SoftDeletes;
 
     protected $fillable = [
-        'user_id', 'kode_siswa', 'nama_siswa', 'kelas', 'status_data',
+        'user_id', 'kode_siswa', 'nisn', 'nama_siswa', 'kelas', 'alamat', 'status_data',
         'c1_id', 'c2_id', 'c3_id', 'c4_id', 'c5_id', 'c6_id'
     ];
 

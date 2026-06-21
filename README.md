@@ -1,59 +1,136 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+<div align="center">
+    <h1>🎓 Sistem Rekomendasi Penerima PIP (Metode TOPSIS)</h1>
+    <p>Aplikasi berbasis web untuk menyeleksi dan merekomendasikan siswa penerima bantuan Program Indonesia Pintar (PIP) menggunakan algoritma <strong>TOPSIS (Technique for Order of Preference by Similarity to Ideal Solution)</strong>.</p>
+</div>
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+---
 
-## About Laravel
+## 🌟 Tentang Proyek
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+Sistem ini dirancang khusus untuk mempermudah instansi sekolah dalam melakukan seleksi penerima dana bantuan PIP secara objektif, transparan, dan terkomputerisasi. Dengan memanfaatkan metode **TOPSIS All-Benefit**, sistem ini secara otomatis memberikan peringkat (ranking) kepada siswa berdasarkan tingkat prioritas dan ketidakmampuan ekonominya.
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+## 🚀 Fitur Utama
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+- 🔐 **Multi-Role Authentication** - Akses terpisah untuk **Kepala Sekolah** (Pemantauan), **Tata Usaha** (Admin Sistem), dan **Wali Kelas** (Input Data).
+- 👥 **Manajemen Pengguna (User Management)** - Fitur khusus Tata Usaha untuk mengelola (Create, Read, Update) dan membekukan (Nonaktifkan) akun guru tanpa menghapus data.
+- 👨‍🎓 **Manajemen Data Siswa** - Wali kelas dapat menambahkan data siswa beserta atribut lengkap (NISN, Alamat Lengkap, Kelas).
+- 🧮 **Dynamic TOPSIS Engine** - Algoritma TOPSIS yang membaca bobot dan atribut kriteria secara dinamis. Menggunakan pendekatan *All-Benefit* di mana kondisi ekonomi yang lebih membutuhkan akan mendapatkan poin *ranking* lebih tinggi.
+- ⚙️ **Master Kriteria Fleksibel** - Data Kriteria dan Sub-kriteria (seperti Pekerjaan Orang Tua, Penghasilan, Tanggungan) dapat disesuaikan bobot dan skalanya sewaktu-waktu oleh Tata Usaha.
+- 📄 **Cetak & Ekspor Laporan** - Laporan hasil seleksi dapat diekspor langsung ke dalam format **PDF** dan **Excel**.
+- 🎨 **Modern & Interactive UI** - Antarmuka yang bersih, responsif, dan elegan menggunakan *Tailwind CSS*.
 
-## Learning Laravel
+## 🛠️ Teknologi yang Digunakan
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework. You can also check out [Laravel Learn](https://laravel.com/learn), where you will be guided through building a modern Laravel application.
+- **Backend:** Laravel 12, PHP ^8.2
+- **Frontend:** TailwindCSS, Blade Templating, Alpine.js, Vite
+- **Database:** MySQL / SQLite
+- **Laporan:** `barryvdh/laravel-dompdf` (PDF), `maatwebsite/excel` (Excel)
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+## 📋 Prasyarat Sistem
 
-## Laravel Sponsors
+Sebelum melakukan instalasi, pastikan sistem Anda memiliki lingkungan berikut:
+- **PHP** >= 8.2
+- **Composer** (Package Manager untuk PHP)
+- **Node.js & npm** (Package Manager untuk Frontend Assets)
+- **Database Server** (MySQL, MariaDB, atau SQLite)
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+---
 
-### Premium Partners
+## ⚙️ Panduan Instalasi
 
-- **[Vehikl](https://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development)**
-- **[Active Logic](https://activelogic.com)**
+Ikuti langkah-langkah di bawah ini untuk menjalankan aplikasi secara lokal:
 
-## Contributing
+### 1. Kloning Repositori
+```bash
+git clone https://github.com/your-username/pip-topsis.git
+cd pip-topsis
+```
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+### 2. Instalasi Dependensi PHP (Composer)
+```bash
+composer install
+```
 
-## Code of Conduct
+### 3. Konfigurasi Environment
+Salin berkas `.env.example` menjadi `.env`.
+```bash
+cp .env.example .env
+```
+Buka berkas `.env` dan sesuaikan kredensial koneksi *database* Anda:
+```env
+DB_CONNECTION=mysql
+DB_HOST=127.0.0.1
+DB_PORT=3306
+DB_DATABASE=pip_topsis
+DB_USERNAME=root
+DB_PASSWORD=
+```
+*(Catatan: Anda juga bisa menggunakan `DB_CONNECTION=sqlite` tanpa perlu menyetel host/username).*
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+### 4. Generate Application Key
+```bash
+php artisan key:generate
+```
 
-## Security Vulnerabilities
+### 5. Migrasi dan Seeding Database
+Langkah ini akan membangun seluruh tabel database beserta data *dummy* awal (Data Kriteria, Sub Kriteria, Akun User, dan Siswa).
+```bash
+php artisan migrate:fresh --seed
+```
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+### 6. Instalasi Dependensi Frontend & Build Assets
+```bash
+npm install
+npm run build
+```
 
-## License
+### 7. Jalankan Server Lokal
+Anda membutuhkan dua terminal yang berjalan secara bersamaan untuk PHP dan Vite:
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+**Terminal 1 (Backend):**
+```bash
+php artisan serve
+```
+
+**Terminal 2 (Frontend):**
+```bash
+npm run dev
+```
+
+Aplikasi sekarang dapat diakses melalui browser di alamat: `http://localhost:8000`
+
+---
+
+## 🔑 Akun Default (Seeder)
+
+Setelah melakukan *seeding*, Anda dapat login menggunakan akun berikut:
+
+| Peran (Role) | Email | Password | Akses Utama |
+| :--- | :--- | :--- | :--- |
+| **Tata Usaha** | `tu@sekolah.com` | `password` | Kelola Kriteria, Hitung TOPSIS, Kelola User |
+| **Wali Kelas** | `wali@sekolah.com` | `password` | Tambah/Edit Data Siswa & Penilaian |
+| **Kepala Sekolah** | `kepsek@sekolah.com` | `password` | Pantau Hasil TOPSIS, Cetak Laporan |
+
+---
+
+## 🧪 Pengujian (Unit & Feature Testing)
+
+Aplikasi ini dilengkapi dengan serangkaian pengujian otomatis (TDD) untuk memastikan stabilitas logika *engine* TOPSIS dan autentikasi.
+
+Untuk menjalankan *test suite*, gunakan perintah:
+```bash
+php artisan test
+```
+
+## 🤝 Kontribusi
+
+Jika Anda ingin berkontribusi pada proyek ini:
+1. *Fork* repositori ini
+2. Buat *branch* fitur Anda (`git checkout -b feature/FiturBaru`)
+3. Lakukan *commit* pada perubahan Anda (`git commit -m 'Menambahkan Fitur Baru'`)
+4. *Push* ke *branch* (`git push origin feature/FiturBaru`)
+5. Buka sebuah *Pull Request*
+
+## 📜 Lisensi
+
+Proyek ini berada di bawah lisensi [MIT License](https://opensource.org/licenses/MIT). Silakan modifikasi dan gunakan secara bebas untuk keperluan Anda.

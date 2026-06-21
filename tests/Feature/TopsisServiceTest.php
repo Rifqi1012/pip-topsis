@@ -29,12 +29,12 @@ class TopsisServiceTest extends TestCase
     {
         // Kriteria
         $kriterias = [
-            ['kode' => 'C1', 'nama_kriteria' => 'Pekerjaan Ayah', 'atribut' => 'Cost', 'bobot' => 5],
-            ['kode' => 'C2', 'nama_kriteria' => 'Penghasilan Ayah', 'atribut' => 'Cost', 'bobot' => 4],
-            ['kode' => 'C3', 'nama_kriteria' => 'Pekerjaan Ibu', 'atribut' => 'Cost', 'bobot' => 5],
-            ['kode' => 'C4', 'nama_kriteria' => 'Penghasilan Ibu', 'atribut' => 'Cost', 'bobot' => 4],
+            ['kode' => 'C1', 'nama_kriteria' => 'Pekerjaan Ayah', 'atribut' => 'Benefit', 'bobot' => 5],
+            ['kode' => 'C2', 'nama_kriteria' => 'Penghasilan Ayah', 'atribut' => 'Benefit', 'bobot' => 4],
+            ['kode' => 'C3', 'nama_kriteria' => 'Pekerjaan Ibu', 'atribut' => 'Benefit', 'bobot' => 5],
+            ['kode' => 'C4', 'nama_kriteria' => 'Penghasilan Ibu', 'atribut' => 'Benefit', 'bobot' => 4],
             ['kode' => 'C5', 'nama_kriteria' => 'Jumlah Tanggungan', 'atribut' => 'Benefit', 'bobot' => 4],
-            ['kode' => 'C6', 'nama_kriteria' => 'Status Siswa', 'atribut' => 'Cost', 'bobot' => 5],
+            ['kode' => 'C6', 'nama_kriteria' => 'Status Siswa', 'atribut' => 'Benefit', 'bobot' => 5],
         ];
 
         foreach ($kriterias as $k) {
@@ -43,14 +43,14 @@ class TopsisServiceTest extends TestCase
 
         $user = User::factory()->create(['role' => 'wali_kelas']);
 
-        // Siswa 1 (Submitted, Nilai Bagus untuk Prioritas)
-        // Benefit (C5) = 5 (Max), Cost (C1,C2,C3,C4,C6) = 1 (Min) -> Sangat Prioritas
+        // Siswa 1 (Submitted, Nilai Buruk untuk Prioritas)
+        // All Benefit = 1 (Kecuali C5 = 5) -> Kurang Prioritas
         $this->createSiswa($user->id, 'SW-001', 'Siswa A', 'submitted', [
             'C1' => 1, 'C2' => 1, 'C3' => 1, 'C4' => 1, 'C5' => 5, 'C6' => 1
         ]);
 
-        // Siswa 2 (Submitted, Nilai Buruk untuk Prioritas)
-        // Benefit = 1, Cost = 5 -> Kurang Prioritas
+        // Siswa 2 (Submitted, Nilai Bagus untuk Prioritas)
+        // All Benefit = 5 (Kecuali C5 = 1) -> Sangat Prioritas
         $this->createSiswa($user->id, 'SW-002', 'Siswa B', 'submitted', [
             'C1' => 5, 'C2' => 5, 'C3' => 5, 'C4' => 5, 'C5' => 1, 'C6' => 5
         ]);
@@ -123,12 +123,12 @@ class TopsisServiceTest extends TestCase
         $rankings = $data['rankings'];
         $preferences = $data['preferences'];
 
-        $siswaA = Siswa::where('kode_siswa', 'SW-001')->first(); // Harusnya rank 1 (Prioritas)
-        $siswaB = Siswa::where('kode_siswa', 'SW-002')->first(); // Harusnya rank 2
+        $siswaA = Siswa::where('kode_siswa', 'SW-001')->first(); // Harusnya rank 2 (Kurang Prioritas)
+        $siswaB = Siswa::where('kode_siswa', 'SW-002')->first(); // Harusnya rank 1 (Prioritas)
 
-        $this->assertEquals(1, $rankings[$siswaA->id]);
-        $this->assertEquals(2, $rankings[$siswaB->id]);
+        $this->assertEquals(2, $rankings[$siswaA->id]);
+        $this->assertEquals(1, $rankings[$siswaB->id]);
 
-        $this->assertTrue($preferences[$siswaA->id] > $preferences[$siswaB->id]);
+        $this->assertTrue($preferences[$siswaB->id] > $preferences[$siswaA->id]);
     }
 }

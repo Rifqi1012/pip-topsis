@@ -23,8 +23,10 @@ class StoreSiswaRequest extends FormRequest
     public function rules(): array
     {
         return [
+            'nisn' => 'required|string|max:20|unique:siswas,nisn',
             'nama_siswa' => 'required|string|max:255',
             'kelas' => 'required|string|max:50',
+            'alamat' => 'nullable|string',
             'status_data' => 'required|in:draft,submitted',
             'c1_id' => 'required|exists:sub_kriterias,id',
             'c2_id' => 'required|exists:sub_kriterias,id',

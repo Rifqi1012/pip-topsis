@@ -39,9 +39,9 @@ class HasilTopsisExport implements FromCollection, WithHeadings, WithMapping, Sh
     {
         return [
             $row->ranking,
-            $row->siswa->kode_siswa,
-            $row->siswa->nama_siswa,
-            $row->siswa->kelas,
+            $row->siswa->kode_siswa ?? '-',
+            $row->siswa->nama_siswa ?? 'Siswa Dihapus',
+            $row->siswa->kelas ?? '-',
             number_format($row->nilai_preferensi, 4),
             $row->status_rekomendasi
         ];

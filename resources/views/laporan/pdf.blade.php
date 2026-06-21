@@ -115,9 +115,9 @@
             @forelse ($hasil as $h)
                 <tr>
                     <td class="text-center">{{ $h->ranking }}</td>
-                    <td class="text-center">{{ $h->siswa->kode_siswa }}</td>
-                    <td>{{ $h->siswa->nama_siswa }}</td>
-                    <td class="text-center">{{ $h->siswa->kelas }}</td>
+                    <td class="text-center">{{ $h->siswa->kode_siswa ?? '-' }}</td>
+                    <td>{{ $h->siswa->nama_siswa ?? 'Siswa Dihapus' }}</td>
+                    <td class="text-center">{{ $h->siswa->kelas ?? '-' }}</td>
                     <td class="text-right">{{ number_format($h->nilai_preferensi, 4) }}</td>
                     <td class="text-center">
                         @if($h->status_rekomendasi == 'Direkomendasikan')

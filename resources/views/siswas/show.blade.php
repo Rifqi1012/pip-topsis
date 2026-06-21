@@ -22,12 +22,20 @@
                         <span class="font-semibold text-lg">{{ $siswa->kode_siswa }}</span>
                     </li>
                     <li>
+                        <span class="block text-sm text-gray-500">NISN</span>
+                        <span class="font-semibold">{{ $siswa->nisn ?? '-' }}</span>
+                    </li>
+                    <li>
                         <span class="block text-sm text-gray-500">Nama Siswa</span>
                         <span class="font-semibold">{{ $siswa->nama_siswa }}</span>
                     </li>
                     <li>
                         <span class="block text-sm text-gray-500">Kelas</span>
                         <span class="font-semibold">{{ $siswa->kelas }}</span>
+                    </li>
+                    <li>
+                        <span class="block text-sm text-gray-500">Alamat Lengkap</span>
+                        <span class="font-semibold">{{ $siswa->alamat ?? '-' }}</span>
                     </li>
                     <li>
                         <span class="block text-sm text-gray-500">Wali Kelas Penginput</span>
