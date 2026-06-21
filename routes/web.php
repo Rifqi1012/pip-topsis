@@ -14,8 +14,8 @@ Route::middleware(['auth', 'role:wali_kelas'])->group(function () {
 Route::middleware(['auth', 'role:tata_usaha'])->group(function () {
     Route::get('/tata-usaha/dashboard', [\App\Http\Controllers\DashboardController::class, 'index'])->name('tata-usaha.dashboard');
     
-    Route::resource('kriteria', \App\Http\Controllers\KriteriaController::class)->only(['index', 'show', 'edit', 'update']);
-    Route::resource('sub_kriteria', \App\Http\Controllers\SubKriteriaController::class)->only(['index', 'show', 'edit', 'update']);
+    Route::resource('kriteria', \App\Http\Controllers\KriteriaController::class)->only(['index', 'show', 'edit', 'update'])->parameters(['kriteria' => 'kriteria']);
+    Route::resource('sub_kriteria', \App\Http\Controllers\SubKriteriaController::class)->only(['index', 'show', 'edit', 'update'])->parameters(['sub_kriteria' => 'subKriteria']);
     
     // Kelola User
     Route::resource('users', \App\Http\Controllers\UserController::class)->except(['show', 'destroy']);
