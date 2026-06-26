@@ -130,7 +130,3 @@ Jika Anda ingin berkontribusi pada proyek ini:
 3. Lakukan *commit* pada perubahan Anda (`git commit -m 'Menambahkan Fitur Baru'`)
 4. *Push* ke *branch* (`git push origin feature/FiturBaru`)
 5. Buka sebuah *Pull Request*
-
-## 📜 Lisensi
-
-Proyek ini berada di bawah lisensi [MIT License](https://opensource.org/licenses/MIT). Silakan modifikasi dan gunakan secara bebas untuk keperluan Anda.
