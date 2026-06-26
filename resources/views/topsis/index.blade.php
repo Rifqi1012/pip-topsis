@@ -95,17 +95,7 @@
                         <tbody>
                             @foreach ($hasil as $h)
                                 <tr class="bg-white border-b hover:bg-gray-50 transition-colors {{ $h->status_rekomendasi === 'Direkomendasikan' ? 'bg-green-50/30' : '' }}">
-                                    <td class="px-6 py-4 text-center">
-                                        @if($h->ranking == 1)
-                                            <span class="inline-flex items-center justify-center w-8 h-8 rounded-full bg-yellow-100 text-yellow-800 font-bold border border-yellow-300">1</span>
-                                        @elseif($h->ranking == 2)
-                                            <span class="inline-flex items-center justify-center w-8 h-8 rounded-full bg-gray-200 text-gray-800 font-bold border border-gray-300">2</span>
-                                        @elseif($h->ranking == 3)
-                                            <span class="inline-flex items-center justify-center w-8 h-8 rounded-full bg-orange-100 text-orange-800 font-bold border border-orange-300">3</span>
-                                        @else
-                                            <span class="font-medium text-gray-600">{{ $h->ranking }}</span>
-                                        @endif
-                                    </td>
+                                    <td class="px-6 py-4 text-center">{{ $h->ranking }}</td>
                                     <td class="px-6 py-4 font-semibold text-gray-900">{{ $h->siswa->kode_siswa ?? '-' }}</td>
                                     <td class="px-6 py-4">{{ $h->siswa->nama_siswa ?? 'Siswa Dihapus' }}</td>
                                     <td class="px-6 py-4">{{ $h->siswa->kelas ?? '-' }}</td>

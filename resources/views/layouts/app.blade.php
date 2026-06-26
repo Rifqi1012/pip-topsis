@@ -88,10 +88,10 @@
                                 default => 'dashboard',
                             };
                             
-                            $linkActive = 'bg-blue-50 text-blue-700 border-l-4 border-blue-600 font-semibold';
-                            $linkInactive = 'text-slate-600 hover:bg-slate-50 border-l-4 border-transparent font-medium';
-                            $iconActive = 'text-blue-600';
-                            $iconInactive = 'text-slate-400 group-hover:text-slate-600';
+                            $linkActive = 'bg-yellow-50 text-yellow-600 border-l-4 border-yellow-500 font-semibold';
+                            $linkInactive = 'text-blue-600 hover:bg-blue-50 border-l-4 border-transparent font-medium';
+                            $iconActive = 'text-yellow-500';
+                            $iconInactive = 'text-blue-500 group-hover:text-blue-600';
                         @endphp
                         
                         <!-- Dashboard -->
