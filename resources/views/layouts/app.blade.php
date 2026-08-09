@@ -42,9 +42,8 @@
                     <!-- Title -->
                     <div class="hidden sm:block">
                         <h1 class="font-bold text-sm md:text-base leading-tight tracking-tight text-slate-800">
-                            SPK PENERIMA PROGRAM<br>
-                            <span class="text-blue-600">INDONESIA PINTAR (PIP)</span><br>
-                            METODE TOPSIS
+                            SPK PENERIMA<br>
+                            <span class="text-blue-600">PROGRAM INDONESIA PINTAR (PIP)</span><br>
                         </h1>
                     </div>
                 </div>

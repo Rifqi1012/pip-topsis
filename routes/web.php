@@ -9,6 +9,13 @@ Route::get('/dashboard', [\App\Http\Controllers\DashboardController::class, 'ind
 
 Route::middleware(['auth', 'role:wali_kelas'])->group(function () {
     Route::get('/wali-kelas/dashboard', [\App\Http\Controllers\DashboardController::class, 'index'])->name('wali-kelas.dashboard');
+    
+    // Import Data Siswa (Wali Kelas)
+    Route::get('/siswa/import', [\App\Http\Controllers\SiswaImportController::class, 'index'])->name('siswa-import.index');
+    Route::post('/siswa/import/sheets', [\App\Http\Controllers\SiswaImportController::class, 'getSheets'])->name('siswa-import.get-sheets');
+    Route::post('/siswa/import/preview', [\App\Http\Controllers\SiswaImportController::class, 'preview'])->name('siswa-import.preview');
+    Route::post('/siswa/import/process', [\App\Http\Controllers\SiswaImportController::class, 'process'])->name('siswa-import.process');
+    Route::get('/siswa/import/template/{type}', [\App\Http\Controllers\SiswaImportController::class, 'downloadTemplate'])->name('siswa-import.template');
 });
 
 Route::middleware(['auth', 'role:tata_usaha'])->group(function () {

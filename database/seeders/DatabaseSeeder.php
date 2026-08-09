@@ -40,7 +40,6 @@ class DatabaseSeeder extends Seeder
             KriteriaSeeder::class,
             SubKriteriaSeeder::class,
             PengaturanSeeder::class,
-            DummySiswaSeeder::class,
         ]);
     }
 }

@@ -46,7 +46,6 @@
             <h1 class="font-extrabold text-lg md:text-xl lg:text-2xl leading-snug text-slate-800 tracking-tight">
                 SISTEM PENDUKUNG KEPUTUSAN<br>
                 <span class="text-blue-600">PENERIMA PROGRAM INDONESIA PINTAR (PIP)</span><br>
-                METODE TOPSIS
             </h1>
         </div>
     </header>

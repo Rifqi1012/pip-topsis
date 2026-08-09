@@ -18,7 +18,7 @@
                     Selamat Datang, {{ Auth::user()->name }}! 
                     <span class="text-yellow-300">👋</span>
                 </h3>
-                <p class="text-blue-100 text-lg font-medium max-w-2xl">Sistem Pendukung Keputusan Penerima Program Indonesia Pintar (PIP) menggunakan metode TOPSIS.</p>
+                <p class="text-blue-100 text-lg font-medium max-w-2xl">Sistem Pendukung Keputusan Penerima Program Indonesia Pintar (PIP)</p>
             </div>
         </div>
 
