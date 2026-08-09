@@ -44,7 +44,7 @@
                 </ul>
 
                 <div class="mt-8 flex space-x-3">
-                    <a href="{{ route('siswas.index') }}" class="w-full text-center text-gray-700 bg-white border border-gray-300 hover:bg-gray-50 focus:ring-4 focus:ring-gray-100 font-medium rounded-lg text-sm px-5 py-2.5 transition-colors">Kembali</a>
+                    <a href="{{ url()->previous() !== url()->current() ? url()->previous() : route('siswas.index') }}" onclick="window.history.back(); return false;" class="w-full text-center text-gray-700 bg-white border border-gray-300 hover:bg-gray-50 focus:ring-4 focus:ring-gray-100 font-medium rounded-lg text-sm px-5 py-2.5 transition-colors">Kembali</a>
                     
                     @can('update', $siswa)
                     <a href="{{ route('siswas.edit', $siswa->id) }}" class="w-full text-center text-white bg-blue-600 hover:bg-blue-700 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 transition-colors">Edit Data</a>

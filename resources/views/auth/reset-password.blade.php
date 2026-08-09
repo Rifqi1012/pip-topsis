@@ -1,39 +1,166 @@
-<x-guest-layout>
-    <form method="POST" action="{{ route('password.store') }}">
-        @csrf
+<!DOCTYPE html>
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
 
-        <!-- Password Reset Token -->
-        <input type="hidden" name="token" value="{{ $request->route('token') }}">
+    <title>Reset Password - PIP TOPSIS</title>
 
-        <!-- Email Address -->
-        <div>
-            <x-input-label for="email" :value="__('Email')" />
-            <x-text-input id="email" class="block mt-1 w-full" type="email" name="email" :value="old('email', $request->email)" required autofocus autocomplete="username" />
-            <x-input-error :messages="$errors->get('email')" class="mt-2" />
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <!-- Scripts -->
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
+    
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            font-size: 14px;
+        }
+        .login-title {
+            font-size: 22px;
+            letter-spacing: 0.05em;
+        }
+        .bg-pattern {
+            background-color: #f8fafc;
+            background-image: radial-gradient(#e2e8f0 1px, transparent 1px);
+            background-size: 20px 20px;
+        }
+    </style>
+</head>
+<body class="antialiased text-slate-800 min-h-screen flex flex-col bg-pattern">
+
+    <!-- Header Section -->
+    <header class="w-full flex items-center px-8 py-5 bg-white border-b-4 border-yellow-400 shadow-sm relative z-10">
+        <div class="flex-shrink-0 w-32">
+            @if(file_exists(public_path('images/logo.png')))
+                <img src="{{ asset('images/logo.png') }}" alt="Logo" class="h-30 w-auto drop-shadow-md">
+            @else
+                <div class="w-20 h-20 bg-blue-100 border-2 border-blue-600 rounded-lg flex items-center justify-center font-bold text-blue-800">LOGO</div>
+            @endif
         </div>
-
-        <!-- Password -->
-        <div class="mt-4">
-            <x-input-label for="password" :value="__('Password')" />
-            <x-text-input id="password" class="block mt-1 w-full" type="password" name="password" required autocomplete="new-password" />
-            <x-input-error :messages="$errors->get('password')" class="mt-2" />
+        <div class="flex-1 text-center pr-32">
+            <h1 class="font-extrabold text-lg md:text-xl lg:text-2xl leading-snug text-slate-800 tracking-tight">
+                SISTEM PENDUKUNG KEPUTUSAN<br>
+                <span class="text-blue-600">PENERIMA PROGRAM INDONESIA PINTAR (PIP)</span><br>
+                METODE TOPSIS
+            </h1>
         </div>
+    </header>
 
-        <!-- Confirm Password -->
-        <div class="mt-4">
-            <x-input-label for="password_confirmation" :value="__('Confirm Password')" />
+    <!-- Main Content -->
+    <main class="flex-1 flex items-center justify-center p-6">
+        <div class="w-full max-w-md bg-white border border-slate-200 rounded-xl shadow-xl p-8 pt-6 relative overflow-hidden">
+            <!-- Decorative top accent -->
+            <div class="absolute top-0 left-0 w-full h-1.5 bg-blue-600"></div>
 
-            <x-text-input id="password_confirmation" class="block mt-1 w-full"
-                                type="password"
-                                name="password_confirmation" required autocomplete="new-password" />
+            <div class="flex items-center mb-6 mt-2">
+                <div class="flex-1 border-b border-slate-200"></div>
+                <h2 class="px-4 font-extrabold login-title text-slate-800 text-center">RESET PASSWORD</h2>
+                <div class="flex-1 border-b border-slate-200"></div>
+            </div>
 
-            <x-input-error :messages="$errors->get('password_confirmation')" class="mt-2" />
+            <form method="POST" action="{{ route('password.store') }}">
+                @csrf
+
+                <!-- Password Reset Token -->
+                <input type="hidden" name="token" value="{{ $request->route('token') }}">
+
+                <!-- Email / Username -->
+                <div class="mb-5 group">
+                    <label for="email" class="block font-semibold mb-2 text-slate-700 group-focus-within:text-blue-600 transition-colors">Username / Email</label>
+                    <div class="relative shadow-sm">
+                        <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                            <svg class="w-5 h-5 text-slate-400 group-focus-within:text-blue-500 transition-colors" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
+                                <path d="M10 0a10 10 0 1 0 10 10A10.011 10.011 0 0 0 10 0Zm0 5a3 3 0 1 1 0 6 3 3 0 0 1 0-6Zm0 13a8.949 8.949 0 0 1-4.951-1.488A3.987 3.987 0 0 1 9 13h2a3.987 3.987 0 0 1 3.951 3.512A8.949 8.949 0 0 1 10 18Z"/>
+                            </svg>
+                        </div>
+                        <input type="email" id="email" name="email" class="bg-slate-50 border border-slate-300 text-slate-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 p-3 transition-all" placeholder="Masukkan username / email" value="{{ old('email', $request->email) }}" required autofocus autocomplete="username" readonly>
+                    </div>
+                    <x-input-error :messages="$errors->get('email')" class="mt-2" />
+                </div>
+
+                <!-- Password Baru -->
+                <div class="mb-5 group">
+                    <label for="password" class="block font-semibold mb-2 text-slate-700 group-focus-within:text-blue-600 transition-colors">Password Baru</label>
+                    <div class="relative shadow-sm">
+                        <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                            <svg class="w-5 h-5 text-slate-400 group-focus-within:text-blue-500 transition-colors" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 16 20">
+                                <path d="M14 7h-1.5V4.5a4.5 4.5 0 1 0-9 0V7H2a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2Zm-5 7a2 2 0 1 1-4 0 2 2 0 0 1 4 0Zm1-7H6V4.5a2.5 2.5 0 1 1 5 0V7Z"/>
+                            </svg>
+                        </div>
+                        <input type="password" id="password" name="password" class="bg-slate-50 border border-slate-300 text-slate-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 pr-10 p-3 transition-all" placeholder="Masukkan password baru" required autocomplete="new-password">
+                        <button type="button" id="toggle-password" class="absolute inset-y-0 right-0 flex items-center pr-3 text-slate-400 hover:text-slate-600 focus:outline-none transition-colors" tabindex="-1" title="Tampilkan Password">
+                            <svg id="eye-open-1" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                            </svg>
+                            <svg id="eye-closed-1" class="w-5 h-5 hidden" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21" />
+                            </svg>
+                        </button>
+                    </div>
+                    <x-input-error :messages="$errors->get('password')" class="mt-2" />
+                </div>
+
+                <!-- Konfirmasi Password -->
+                <div class="mb-8 group">
+                    <label for="password_confirmation" class="block font-semibold mb-2 text-slate-700 group-focus-within:text-blue-600 transition-colors">Konfirmasi Password Baru</label>
+                    <div class="relative shadow-sm">
+                        <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                            <svg class="w-5 h-5 text-slate-400 group-focus-within:text-blue-500 transition-colors" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 16 20">
+                                <path d="M14 7h-1.5V4.5a4.5 4.5 0 1 0-9 0V7H2a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2Zm-5 7a2 2 0 1 1-4 0 2 2 0 0 1 4 0Zm1-7H6V4.5a2.5 2.5 0 1 1 5 0V7Z"/>
+                            </svg>
+                        </div>
+                        <input type="password" id="password_confirmation" name="password_confirmation" class="bg-slate-50 border border-slate-300 text-slate-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 pr-10 p-3 transition-all" placeholder="Ulangi password baru" required autocomplete="new-password">
+                        <button type="button" id="toggle-password-confirm" class="absolute inset-y-0 right-0 flex items-center pr-3 text-slate-400 hover:text-slate-600 focus:outline-none transition-colors" tabindex="-1" title="Tampilkan Password">
+                            <svg id="eye-open-2" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                            </svg>
+                            <svg id="eye-closed-2" class="w-5 h-5 hidden" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21" />
+                            </svg>
+                        </button>
+                    </div>
+                    <x-input-error :messages="$errors->get('password_confirmation')" class="mt-2" />
+                </div>
+
+                <!-- Button -->
+                <button type="submit" class="w-full text-white bg-blue-600 hover:bg-blue-700 focus:ring-4 focus:outline-none focus:ring-blue-300 font-bold rounded-lg text-sm px-5 py-3.5 text-center shadow-md hover:shadow-lg transition-all transform active:scale-[0.98]">
+                    SIMPAN PASSWORD BARU
+                </button>
+
+                <!-- Footer Text -->
+                <div class="mt-6 text-center text-slate-500 px-4 border-t border-slate-200 pt-5 text-xs leading-relaxed">
+                    Pastikan password baru Anda kuat dan mudah diingat oleh Anda.
+                </div>
+            </form>
         </div>
+    </main>
 
-        <div class="flex items-center justify-end mt-4">
-            <x-primary-button>
-                {{ __('Reset Password') }}
-            </x-primary-button>
-        </div>
-    </form>
-</x-guest-layout>
+    <script>
+        function setupPasswordToggle(buttonId, inputId, eyeOpenId, eyeClosedId) {
+            const button = document.getElementById(buttonId);
+            const input = document.getElementById(inputId);
+            const openIcon = document.getElementById(eyeOpenId);
+            const closedIcon = document.getElementById(eyeClosedId);
+
+            if (button && input) {
+                button.addEventListener('click', function () {
+                    const type = input.getAttribute('type') === 'password' ? 'text' : 'password';
+                    input.setAttribute('type', type);
+                    if (openIcon) openIcon.classList.toggle('hidden');
+                    if (closedIcon) closedIcon.classList.toggle('hidden');
+                });
+            }
+        }
+
+        setupPasswordToggle('toggle-password', 'password', 'eye-open-1', 'eye-closed-1');
+        setupPasswordToggle('toggle-password-confirm', 'password_confirmation', 'eye-open-2', 'eye-closed-2');
+    </script>
+</body>
+</html>

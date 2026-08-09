@@ -16,182 +16,67 @@
                 </a>
             </div>
 
-            <form action="{{ route('siswas.store') }}" method="POST">
+            <form action="{{ route('siswas.store') }}" method="POST" class="mt-8">
                 @csrf
                 
-                <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+                <div class="grid grid-cols-1 gap-8">
                     <!-- Data Identitas -->
-                    <div class="lg:col-span-5">
-                        <div class="bg-slate-50 p-6 rounded-xl border border-slate-100 sticky top-6">
-                            <h4 class="text-lg font-bold text-slate-800 mb-6 flex items-center gap-2">
-                                <span class="bg-blue-100 text-blue-600 p-1.5 rounded-lg">
-                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg>
-                                </span>
-                                Data Identitas
-                            </h4>
-                            
-                            <div class="space-y-5">
-                                <div>
-                                    <label for="nisn" class="block mb-2 text-sm font-bold text-slate-700">NISN</label>
-                                    <input type="text" id="nisn" name="nisn" value="{{ old('nisn') }}" class="bg-white border border-slate-300 text-slate-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-3 shadow-sm transition-all" placeholder="Masukkan NISN siswa..." required>
-                                    @error('nisn') <p class="mt-1 text-sm text-red-600 font-medium">{{ $message }}</p> @enderror
-                                </div>
-
-                                <div>
-                                    <label for="nama_siswa" class="block mb-2 text-sm font-bold text-slate-700">Nama Siswa</label>
-                                    <input type="text" id="nama_siswa" name="nama_siswa" value="{{ old('nama_siswa') }}" class="bg-white border border-slate-300 text-slate-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-3 shadow-sm transition-all" placeholder="Masukkan nama lengkap siswa..." required>
-                                    @error('nama_siswa') <p class="mt-1 text-sm text-red-600 font-medium">{{ $message }}</p> @enderror
-                                </div>
-
-                                <div>
-                                    <label for="kelas" class="block mb-2 text-sm font-bold text-slate-700">Kelas</label>
-                                    <input type="text" id="kelas" name="kelas" value="{{ old('kelas') }}" class="bg-white border border-slate-300 text-slate-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-3 shadow-sm transition-all" placeholder="Contoh: 1A" required>
-                                    @error('kelas') <p class="mt-1 text-sm text-red-600 font-medium">{{ $message }}</p> @enderror
-                                </div>
-
-                                <div>
-                                    <label for="alamat" class="block mb-2 text-sm font-bold text-slate-700">Alamat Lengkap</label>
-                                    <textarea id="alamat" name="alamat" rows="3" class="bg-white border border-slate-300 text-slate-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-3 shadow-sm transition-all" placeholder="Masukkan alamat lengkap siswa...">{{ old('alamat') }}</textarea>
-                                    @error('alamat') <p class="mt-1 text-sm text-red-600 font-medium">{{ $message }}</p> @enderror
-                                </div>
-
-                                <div>
-                                    <label for="status_data" class="block mb-2 text-sm font-bold text-slate-700">Status Data</label>
-                                    <select id="status_data" name="status_data" class="bg-white border border-slate-300 text-slate-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-3 shadow-sm transition-all font-medium" required>
-                                        <option value="draft" {{ old('status_data') == 'draft' ? 'selected' : '' }}>Draft (Belum lengkap)</option>
-                                        <option value="submitted" {{ old('status_data') == 'submitted' ? 'selected' : '' }}>Submitted (Siap diproses TOPSIS)</option>
-                                    </select>
-                                    @error('status_data') <p class="mt-1 text-sm text-red-600 font-medium">{{ $message }}</p> @enderror
-                                </div>
+                    <div class="bg-slate-50 p-6 rounded-xl border border-slate-100">
+                        <h4 class="text-lg font-bold text-slate-800 mb-6 flex items-center gap-2">
+                            <span class="bg-blue-100 text-blue-600 p-1.5 rounded-lg">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg>
+                            </span>
+                            Data Identitas
+                        </h4>
+                        
+                        <div class="space-y-5">
+                            <div>
+                                <label for="nisn" class="block mb-2 text-sm font-bold text-slate-700">NISN</label>
+                                <input type="text" id="nisn" name="nisn" value="{{ old('nisn') }}" class="bg-white border border-slate-300 text-slate-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-3 shadow-sm transition-all" placeholder="Masukkan NISN siswa..." required>
+                                @error('nisn') <p class="mt-1 text-sm text-red-600 font-medium">{{ $message }}</p> @enderror
                             </div>
-                        </div>
-                    </div>
 
-                    <!-- Data Penilaian -->
-                    <div class="lg:col-span-7">
-                        <div class="bg-white p-6 rounded-xl border border-slate-100 shadow-sm">
-                            <h4 class="text-lg font-bold text-slate-800 mb-6 flex items-center gap-2">
-                                <span class="bg-yellow-100 text-yellow-600 p-1.5 rounded-lg">
-                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path></svg>
-                                </span>
-                                Data Penilaian / Kriteria
-                            </h4>
-                            
-                            <div class="space-y-8">
-                                <!-- C1 -->
-                                <div>
-                                    <label class="block mb-3 text-sm font-bold text-slate-700">Pekerjaan Ayah</label>
-                                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                                        @foreach($c1 as $opt)
-                                            <label class="cursor-pointer relative">
-                                                <input type="radio" name="c1_id" value="{{ $opt->id }}" class="peer sr-only" {{ old('c1_id') == $opt->id ? 'checked' : '' }} required>
-                                                <div class="rounded-xl border-2 border-slate-200 bg-white p-4 hover:border-blue-300 peer-checked:border-blue-600 peer-checked:bg-blue-50 transition-all text-sm flex flex-col items-center justify-center min-h-[4rem] text-center">
-                                                    <span class="block font-bold text-slate-700 peer-checked:text-blue-800">{{ $opt->nama_sub_kriteria }}</span>
-                                                </div>
-                                                <div class="absolute top-2 right-2 text-blue-600 hidden peer-checked:block">
-                                                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path></svg>
-                                                </div>
-                                            </label>
-                                        @endforeach
-                                    </div>
-                                    @error('c1_id') <p class="mt-2 text-sm text-red-600 font-medium">{{ $message }}</p> @enderror
-                                </div>
+                            <div>
+                                <label for="nama_siswa" class="block mb-2 text-sm font-bold text-slate-700">Nama Siswa</label>
+                                <input type="text" id="nama_siswa" name="nama_siswa" value="{{ old('nama_siswa') }}" class="bg-white border border-slate-300 text-slate-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-3 shadow-sm transition-all" placeholder="Masukkan nama lengkap siswa..." required>
+                                @error('nama_siswa') <p class="mt-1 text-sm text-red-600 font-medium">{{ $message }}</p> @enderror
+                            </div>
 
-                                <!-- C2 -->
-                                <div>
-                                    <label class="block mb-3 text-sm font-bold text-slate-700">Penghasilan Ayah</label>
-                                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                                        @foreach($c2 as $opt)
-                                            <label class="cursor-pointer relative">
-                                                <input type="radio" name="c2_id" value="{{ $opt->id }}" class="peer sr-only" {{ old('c2_id') == $opt->id ? 'checked' : '' }} required>
-                                                <div class="rounded-xl border-2 border-slate-200 bg-white p-4 hover:border-blue-300 peer-checked:border-blue-600 peer-checked:bg-blue-50 transition-all text-sm flex flex-col items-center justify-center min-h-[4rem] text-center">
-                                                    <span class="block font-bold text-slate-700 peer-checked:text-blue-800">{{ $opt->nama_sub_kriteria }}</span>
-                                                </div>
-                                                <div class="absolute top-2 right-2 text-blue-600 hidden peer-checked:block">
-                                                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path></svg>
-                                                </div>
-                                            </label>
-                                        @endforeach
-                                    </div>
-                                    @error('c2_id') <p class="mt-2 text-sm text-red-600 font-medium">{{ $message }}</p> @enderror
-                                </div>
+                            <div>
+                                <label for="kelas" class="block mb-2 text-sm font-bold text-slate-700">Kelas</label>
+                                <input type="text" id="kelas" name="kelas" value="{{ old('kelas') }}" class="bg-white border border-slate-300 text-slate-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-3 shadow-sm transition-all" placeholder="Contoh: 1A" required>
+                                @error('kelas') <p class="mt-1 text-sm text-red-600 font-medium">{{ $message }}</p> @enderror
+                            </div>
 
-                                <!-- C3 -->
-                                <div>
-                                    <label class="block mb-3 text-sm font-bold text-slate-700">Pekerjaan Ibu</label>
-                                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                                        @foreach($c3 as $opt)
-                                            <label class="cursor-pointer relative">
-                                                <input type="radio" name="c3_id" value="{{ $opt->id }}" class="peer sr-only" {{ old('c3_id') == $opt->id ? 'checked' : '' }} required>
-                                                <div class="rounded-xl border-2 border-slate-200 bg-white p-4 hover:border-blue-300 peer-checked:border-blue-600 peer-checked:bg-blue-50 transition-all text-sm flex flex-col items-center justify-center min-h-[4rem] text-center">
-                                                    <span class="block font-bold text-slate-700 peer-checked:text-blue-800">{{ $opt->nama_sub_kriteria }}</span>
-                                                </div>
-                                                <div class="absolute top-2 right-2 text-blue-600 hidden peer-checked:block">
-                                                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path></svg>
-                                                </div>
-                                            </label>
-                                        @endforeach
-                                    </div>
-                                    @error('c3_id') <p class="mt-2 text-sm text-red-600 font-medium">{{ $message }}</p> @enderror
-                                </div>
+                            <div>
+                                <label for="periode" class="block mb-2 text-sm font-bold text-slate-700">Periode Tahun Ajaran</label>
+                                <select id="periode" name="periode" class="bg-white border border-slate-300 text-slate-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-3 shadow-sm transition-all" required>
+                                    <option value="">-- Pilih Periode Tahun Ajaran --</option>
+                                    @php
+                                        $currentYear = date('Y');
+                                        $selectedPeriode = old('periode', $currentYear . '/' . ($currentYear + 1));
+                                        $options = isset($tahunAjarans) && $tahunAjarans->isNotEmpty() ? $tahunAjarans : ['2024/2025', '2025/2026', '2026/2027', '2027/2028'];
+                                    @endphp
+                                    @foreach($options as $academicYear)
+                                        <option value="{{ $academicYear }}" {{ $selectedPeriode == $academicYear ? 'selected' : '' }}>{{ $academicYear }}</option>
+                                    @endforeach
+                                </select>
+                                @error('periode') <p class="mt-1 text-sm text-red-600 font-medium">{{ $message }}</p> @enderror
+                            </div>
 
-                                <!-- C4 -->
-                                <div>
-                                    <label class="block mb-3 text-sm font-bold text-slate-700">Penghasilan Ibu</label>
-                                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                                        @foreach($c4 as $opt)
-                                            <label class="cursor-pointer relative">
-                                                <input type="radio" name="c4_id" value="{{ $opt->id }}" class="peer sr-only" {{ old('c4_id') == $opt->id ? 'checked' : '' }} required>
-                                                <div class="rounded-xl border-2 border-slate-200 bg-white p-4 hover:border-blue-300 peer-checked:border-blue-600 peer-checked:bg-blue-50 transition-all text-sm flex flex-col items-center justify-center min-h-[4rem] text-center">
-                                                    <span class="block font-bold text-slate-700 peer-checked:text-blue-800">{{ $opt->nama_sub_kriteria }}</span>
-                                                </div>
-                                                <div class="absolute top-2 right-2 text-blue-600 hidden peer-checked:block">
-                                                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path></svg>
-                                                </div>
-                                            </label>
-                                        @endforeach
-                                    </div>
-                                    @error('c4_id') <p class="mt-2 text-sm text-red-600 font-medium">{{ $message }}</p> @enderror
-                                </div>
+                            <div>
+                                <label for="alamat" class="block mb-2 text-sm font-bold text-slate-700">Alamat Lengkap</label>
+                                <textarea id="alamat" name="alamat" rows="3" class="bg-white border border-slate-300 text-slate-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-3 shadow-sm transition-all" placeholder="Masukkan alamat lengkap siswa...">{{ old('alamat') }}</textarea>
+                                @error('alamat') <p class="mt-1 text-sm text-red-600 font-medium">{{ $message }}</p> @enderror
+                            </div>
 
-                                <!-- C5 -->
-                                <div>
-                                    <label class="block mb-3 text-sm font-bold text-slate-700">Jumlah Tanggungan Keluarga</label>
-                                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                                        @foreach($c5 as $opt)
-                                            <label class="cursor-pointer relative">
-                                                <input type="radio" name="c5_id" value="{{ $opt->id }}" class="peer sr-only" {{ old('c5_id') == $opt->id ? 'checked' : '' }} required>
-                                                <div class="rounded-xl border-2 border-slate-200 bg-white p-4 hover:border-blue-300 peer-checked:border-blue-600 peer-checked:bg-blue-50 transition-all text-sm flex flex-col items-center justify-center min-h-[4rem] text-center">
-                                                    <span class="block font-bold text-slate-700 peer-checked:text-blue-800">{{ $opt->nama_sub_kriteria }}</span>
-                                                </div>
-                                                <div class="absolute top-2 right-2 text-blue-600 hidden peer-checked:block">
-                                                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path></svg>
-                                                </div>
-                                            </label>
-                                        @endforeach
-                                    </div>
-                                    @error('c5_id') <p class="mt-2 text-sm text-red-600 font-medium">{{ $message }}</p> @enderror
-                                </div>
-
-                                <!-- C6 -->
-                                <div>
-                                    <label class="block mb-3 text-sm font-bold text-slate-700">Status Siswa</label>
-                                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                                        @foreach($c6 as $opt)
-                                            <label class="cursor-pointer relative">
-                                                <input type="radio" name="c6_id" value="{{ $opt->id }}" class="peer sr-only" {{ old('c6_id') == $opt->id ? 'checked' : '' }} required>
-                                                <div class="rounded-xl border-2 border-slate-200 bg-white p-4 hover:border-blue-300 peer-checked:border-blue-600 peer-checked:bg-blue-50 transition-all text-sm flex flex-col items-center justify-center min-h-[4rem] text-center">
-                                                    <span class="block font-bold text-slate-700 peer-checked:text-blue-800">{{ $opt->nama_sub_kriteria }}</span>
-                                                </div>
-                                                <div class="absolute top-2 right-2 text-blue-600 hidden peer-checked:block">
-                                                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path></svg>
-                                                </div>
-                                            </label>
-                                        @endforeach
-                                    </div>
-                                    @error('c6_id') <p class="mt-2 text-sm text-red-600 font-medium">{{ $message }}</p> @enderror
-                                </div>
-
+                            <div>
+                                <label for="status_data" class="block mb-2 text-sm font-bold text-slate-700">Status Data</label>
+                                <select id="status_data" name="status_data" class="bg-white border border-slate-300 text-slate-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-3 shadow-sm transition-all font-medium" required>
+                                    <option value="draft" {{ old('status_data') == 'draft' ? 'selected' : '' }}>Draft (Belum lengkap)</option>
+                                    <option value="submitted" {{ old('status_data') == 'submitted' ? 'selected' : '' }}>Submitted (Siap diproses TOPSIS)</option>
+                                </select>
+                                @error('status_data') <p class="mt-1 text-sm text-red-600 font-medium">{{ $message }}</p> @enderror
                             </div>
                         </div>
                     </div>

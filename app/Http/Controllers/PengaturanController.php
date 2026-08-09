@@ -9,7 +9,7 @@ class PengaturanController extends Controller
 {
     public function index()
     {
-        if (auth()->user()->role !== 'tata_usaha') {
+        if (auth()->user()->role !== 'kepala_sekolah') {
             abort(403, 'Unauthorized action.');
         }
 
@@ -19,7 +19,7 @@ class PengaturanController extends Controller
 
     public function update(Request $request)
     {
-        if (auth()->user()->role !== 'tata_usaha') {
+        if (auth()->user()->role !== 'kepala_sekolah') {
             abort(403, 'Unauthorized action.');
         }
 

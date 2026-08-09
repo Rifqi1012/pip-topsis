@@ -23,17 +23,12 @@ class UpdateSiswaRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'nisn' => 'required|string|max:20|unique:siswas,nisn,' . $this->route('siswa')->id,
+            'nisn' => ['required', 'string', 'max:20', \Illuminate\Validation\Rule::unique('siswas', 'nisn')->ignore($this->route('siswa')->id)->whereNull('deleted_at')],
             'nama_siswa' => 'required|string|max:255',
             'kelas' => 'required|string|max:50',
+            'periode' => 'required|string|max:100',
             'alamat' => 'nullable|string',
             'status_data' => 'required|in:draft,submitted',
-            'c1_id' => 'required|exists:sub_kriterias,id',
-            'c2_id' => 'required|exists:sub_kriterias,id',
-            'c3_id' => 'required|exists:sub_kriterias,id',
-            'c4_id' => 'required|exists:sub_kriterias,id',
-            'c5_id' => 'required|exists:sub_kriterias,id',
-            'c6_id' => 'required|exists:sub_kriterias,id',
         ];
     }
 }

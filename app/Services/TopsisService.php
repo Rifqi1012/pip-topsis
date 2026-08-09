@@ -19,7 +19,7 @@ class TopsisService
      * @return array<string, mixed>
      * @throws Exception
      */
-    public function calculate(bool $saveToDb = true): array
+    public function calculate(bool $saveToDb = true, ?string $kelas = null, ?string $periode = null): array
     {
         // 1. Validasi Pra-kondisi
         $kriterias = Kriteria::orderBy('kode', 'asc')->get();
@@ -33,12 +33,25 @@ class TopsisService
             }
         }
 
-        $siswas = Siswa::with(['c1.kriteria', 'c2.kriteria', 'c3.kriteria', 'c4.kriteria', 'c5.kriteria', 'c6.kriteria'])
-            ->where('status_data', 'submitted')
-            ->get();
+        $query = Siswa::with(['c1.kriteria', 'c2.kriteria', 'c3.kriteria', 'c4.kriteria', 'c5.kriteria', 'c6.kriteria'])
+            ->where('status_data', 'submitted');
+
+        if ($kelas) {
+            $query->where('kelas', $kelas);
+        }
+
+        if ($periode) {
+            $query->where('periode', $periode);
+        }
+
+        $siswas = $query->get();
 
         if ($siswas->isEmpty()) {
-            throw new Exception("Tidak ada data siswa dengan status 'submitted' untuk dihitung.");
+            $msg = "Tidak ada data siswa dengan status 'submitted'";
+            if ($kelas) $msg .= " di Kelas {$kelas}";
+            if ($periode) $msg .= " (Periode: {$periode})";
+            $msg .= " untuk diproses. Pastikan data siswa di kelas dan periode tersebut sudah ada dan berstatus submitted.";
+            throw new Exception($msg);
         }
 
         foreach ($siswas as $siswa) {
@@ -107,18 +120,16 @@ class TopsisService
         }
 
         // 5 & 6. Solusi Ideal Positif (A+) dan Negatif (A-)
+        // Catatan: Karena skala nilai sub-kriteria (1-5) sudah diatur berbanding lurus dengan kelayakan (nilai 5 paling membutuhkan),
+        // maka pengecekan atribut 'Benefit'/'Cost' diabaikan:
+        // - Solusi Ideal Positif (A+) SELALU mengambil nilai MAX()
+        // - Solusi Ideal Negatif (A-) SELALU mengambil nilai MIN()
         $positiveIdeal = [];
         $negativeIdeal = [];
 
         foreach ($weightedCriteriaValues as $c => $values) {
-            $attr = $attributes[$c] ?? 'Benefit';
-            if ($attr === 'Benefit') {
-                $positiveIdeal[$c] = collect($values)->max();
-                $negativeIdeal[$c] = collect($values)->min();
-            } else { // Cost
-                $positiveIdeal[$c] = collect($values)->min();
-                $negativeIdeal[$c] = collect($values)->max();
-            }
+            $positiveIdeal[$c] = collect($values)->max();
+            $negativeIdeal[$c] = collect($values)->min();
         }
 
         // 7 & 8. Jarak Solusi (D+ dan D-) & 9. Nilai Preferensi (V)
@@ -169,9 +180,21 @@ class TopsisService
 
         // Transaction untuk menyimpan hasil
         if ($saveToDb) {
-            DB::transaction(function () use ($dbData) {
-                HasilTopsis::query()->delete();
-                HasilTopsis::insert($dbData);
+            DB::transaction(function () use ($dbData, $kelas, $periode) {
+                $q = HasilTopsis::query();
+                
+                if ($kelas || $periode) {
+                    $q->whereHas('siswa', function($sq) use ($kelas, $periode) {
+                        if ($kelas) $sq->where('kelas', $kelas);
+                        if ($periode) $sq->where('periode', $periode);
+                    });
+                }
+                
+                $q->delete();
+                
+                if (!empty($dbData)) {
+                    HasilTopsis::insert($dbData);
+                }
             });
         }
 

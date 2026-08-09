@@ -16,22 +16,38 @@
                 @endif
             </div>
 
-            @if(Auth::user()->role === 'tata_usaha')
-            <!-- Filter & Search untuk TU -->
-            <form action="{{ route('siswas.index') }}" method="GET" class="mb-6 grid grid-cols-1 md:grid-cols-4 gap-4 bg-gray-50 p-4 rounded-lg border border-gray-200">
+            <!-- Filter & Search -->
+            <form action="{{ route('siswas.index') }}" method="GET" class="mb-6 grid grid-cols-1 md:grid-cols-{{ in_array(Auth::user()->role, ['tata_usaha', 'kepala_sekolah']) ? '5' : '3' }} gap-4 bg-gray-50 p-4 rounded-lg border border-gray-200">
                 <div>
                     <label class="block text-xs font-medium text-gray-700 mb-1">Cari (Nama/Kode)</label>
                     <input type="text" name="search" value="{{ request('search') }}" class="w-full text-sm border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500" placeholder="Ketik pencarian...">
                 </div>
+                @if(in_array(Auth::user()->role, ['tata_usaha', 'kepala_sekolah']))
                 <div>
                     <label class="block text-xs font-medium text-gray-700 mb-1">Filter Kelas</label>
                     <select name="kelas" class="w-full text-sm border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500">
                         <option value="">Semua Kelas</option>
                         @foreach($kelasList as $kls)
-                            <option value="{{ $kls }}" {{ request('kelas') == $kls ? 'selected' : '' }}>{{ $kls }}</option>
+                            <option value="{{ $kls }}" {{ request('kelas') == $kls ? 'selected' : '' }}>Kelas {{ $kls }}</option>
                         @endforeach
                     </select>
                 </div>
+                @endif
+                <div>
+                    <label class="block text-xs font-medium text-gray-700 mb-1">Periode Tahun Ajaran</label>
+                    <select name="periode" class="w-full text-sm border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500">
+                        <option value="">Semua Periode Tahun Ajaran</option>
+                        @php
+                            $currentYear = date('Y');
+                            $defaultPeriode = Auth::user()->role === 'wali_kelas' ? $currentYear . '/' . ($currentYear + 1) : null;
+                            $selectedPeriode = request('periode', $defaultPeriode);
+                        @endphp
+                        @foreach($periodeList as $p)
+                            <option value="{{ $p }}" {{ $selectedPeriode == $p ? 'selected' : '' }}>{{ $p }}</option>
+                        @endforeach
+                    </select>
+                </div>
+                @if(in_array(Auth::user()->role, ['tata_usaha', 'kepala_sekolah']))
                 <div>
                     <label class="block text-xs font-medium text-gray-700 mb-1">Filter Wali Kelas</label>
                     <select name="wali_kelas_id" class="w-full text-sm border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500">
@@ -41,12 +57,12 @@
                         @endforeach
                     </select>
                 </div>
+                @endif
                 <div class="flex items-end space-x-2">
                     <button type="submit" class="w-full md:w-auto text-white bg-gray-800 hover:bg-gray-900 focus:ring-4 focus:ring-gray-300 font-medium rounded-lg text-sm px-4 py-2 transition-colors">Terapkan</button>
                     <a href="{{ route('siswas.index') }}" class="w-full md:w-auto text-center text-gray-700 bg-white border border-gray-300 hover:bg-gray-50 focus:ring-4 focus:ring-gray-100 font-medium rounded-lg text-sm px-4 py-2 transition-colors">Reset</a>
                 </div>
             </form>
-            @endif
 
             <div class="overflow-x-auto">
                 <table class="w-full text-sm text-left text-gray-500">
@@ -56,7 +72,7 @@
                             <th scope="col" class="px-6 py-3">NISN</th>
                             <th scope="col" class="px-6 py-3">Nama Siswa</th>
                             <th scope="col" class="px-6 py-3">Kelas</th>
-                            @if(Auth::user()->role === 'tata_usaha')
+                            @if(in_array(Auth::user()->role, ['tata_usaha', 'kepala_sekolah']))
                             <th scope="col" class="px-6 py-3">Wali Kelas</th>
                             @endif
                             <th scope="col" class="px-6 py-3">Status</th>
@@ -70,7 +86,7 @@
                                 <td class="px-6 py-4">{{ $siswa->nisn ?? '-' }}</td>
                                 <td class="px-6 py-4">{{ $siswa->nama_siswa }}</td>
                                 <td class="px-6 py-4">{{ $siswa->kelas }}</td>
-                                @if(Auth::user()->role === 'tata_usaha')
+                                @if(in_array(Auth::user()->role, ['tata_usaha', 'kepala_sekolah']))
                                 <td class="px-6 py-4">{{ $siswa->user->name }}</td>
                                 @endif
                                 <td class="px-6 py-4">
@@ -83,24 +99,22 @@
                                 <td class="px-6 py-4 text-right flex justify-end space-x-3">
                                     <a href="{{ route('siswas.show', $siswa->id) }}" class="text-blue-600 hover:text-blue-900 font-medium">Detail</a>
                                     
-                                    @can('update', $siswa)
+                                    @if(Auth::user()->role === 'wali_kelas')
                                         <span class="text-gray-300">|</span>
                                         <a href="{{ route('siswas.edit', $siswa->id) }}" class="text-orange-500 hover:text-orange-700 font-medium">Edit</a>
-                                    @endcan
                                     
-                                    @can('delete', $siswa)
                                         <span class="text-gray-300">|</span>
                                         <form action="{{ route('siswas.destroy', $siswa->id) }}" method="POST" class="inline" onsubmit="return confirm('Apakah Anda yakin ingin menghapus data ini secara soft delete?');">
                                             @csrf
                                             @method('DELETE')
                                             <button type="submit" class="text-red-600 hover:text-red-900 font-medium bg-transparent border-0 p-0 cursor-pointer">Hapus</button>
                                         </form>
-                                    @endcan
+                                    @endif
                                 </td>
                             </tr>
                         @empty
                             <tr>
-                                <td colspan="{{ Auth::user()->role === 'tata_usaha' ? '6' : '5' }}" class="px-6 py-4 text-center text-gray-500">Tidak ada data siswa ditemukan.</td>
+                                <td colspan="{{ in_array(Auth::user()->role, ['tata_usaha', 'kepala_sekolah']) ? '6' : '5' }}" class="px-6 py-4 text-center text-gray-500">Tidak ada data siswa ditemukan.</td>
                             </tr>
                         @endforelse
                     </tbody>

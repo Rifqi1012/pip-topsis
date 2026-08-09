@@ -13,12 +13,12 @@ class SiswaPolicy
      */
     public function viewAny(User $user): bool
     {
-        return in_array($user->role, ['wali_kelas', 'tata_usaha']);
+        return in_array($user->role, ['wali_kelas', 'tata_usaha', 'kepala_sekolah']);
     }
 
     public function view(User $user, Siswa $siswa): bool
     {
-        if ($user->role === 'tata_usaha') return true;
+        if (in_array($user->role, ['tata_usaha', 'kepala_sekolah'])) return true;
         return $user->role === 'wali_kelas' && $siswa->user_id === $user->id;
     }
 
@@ -29,13 +29,11 @@ class SiswaPolicy
 
     public function update(User $user, Siswa $siswa): bool
     {
-        if ($user->role === 'tata_usaha') return true;
         return $user->role === 'wali_kelas' && $siswa->user_id === $user->id;
     }
 
     public function delete(User $user, Siswa $siswa): bool
     {
-        if ($user->role === 'tata_usaha') return true;
         return $user->role === 'wali_kelas' && $siswa->user_id === $user->id;
     }
 

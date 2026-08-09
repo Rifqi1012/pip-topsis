@@ -38,30 +38,32 @@ class SiswaController extends Controller
             $query->where('kelas', $request->kelas);
         }
 
-        if ($request->filled('wali_kelas_id') && auth()->user()->role === 'tata_usaha') {
+        if ($request->filled('periode')) {
+            $query->where('periode', $request->periode);
+        }
+
+        if ($request->filled('wali_kelas_id') && in_array(auth()->user()->role, ['tata_usaha', 'kepala_sekolah'])) {
             $query->where('user_id', $request->wali_kelas_id);
         }
 
         $siswas = $query->orderBy('created_at', 'desc')->paginate(10)->withQueryString();
         
         $waliKelasList = User::where('role', 'wali_kelas')->get();
-        $kelasList = Siswa::select('kelas')->distinct()->pluck('kelas');
+        $kelasList = collect(['1', '2A', '2B', '3A', '3B', '4', '5', '6']);
+        $periodeList = \App\Models\TahunAjaran::orderBy('tahun_mulai', 'desc')->pluck('nama');
+        if ($periodeList->isEmpty()) {
+            $periodeList = Siswa::select('periode')->whereNotNull('periode')->distinct()->pluck('periode');
+        }
 
-        return view('siswas.index', compact('siswas', 'waliKelasList', 'kelasList'));
+        return view('siswas.index', compact('siswas', 'waliKelasList', 'kelasList', 'periodeList'));
     }
 
     public function create()
     {
         $this->authorize('create', Siswa::class);
 
-        $c1 = Kriteria::where('kode', 'C1')->first()->subKriterias;
-        $c2 = Kriteria::where('kode', 'C2')->first()->subKriterias;
-        $c3 = Kriteria::where('kode', 'C3')->first()->subKriterias;
-        $c4 = Kriteria::where('kode', 'C4')->first()->subKriterias;
-        $c5 = Kriteria::where('kode', 'C5')->first()->subKriterias;
-        $c6 = Kriteria::where('kode', 'C6')->first()->subKriterias;
-
-        return view('siswas.create', compact('c1', 'c2', 'c3', 'c4', 'c5', 'c6'));
+        $tahunAjarans = \App\Models\TahunAjaran::orderBy('tahun_mulai', 'desc')->pluck('nama');
+        return view('siswas.create', compact('tahunAjarans'));
     }
 
     public function store(StoreSiswaRequest $request)
@@ -92,14 +94,8 @@ class SiswaController extends Controller
     {
         $this->authorize('update', $siswa);
 
-        $c1 = Kriteria::where('kode', 'C1')->first()->subKriterias;
-        $c2 = Kriteria::where('kode', 'C2')->first()->subKriterias;
-        $c3 = Kriteria::where('kode', 'C3')->first()->subKriterias;
-        $c4 = Kriteria::where('kode', 'C4')->first()->subKriterias;
-        $c5 = Kriteria::where('kode', 'C5')->first()->subKriterias;
-        $c6 = Kriteria::where('kode', 'C6')->first()->subKriterias;
-
-        return view('siswas.edit', compact('siswa', 'c1', 'c2', 'c3', 'c4', 'c5', 'c6'));
+        $tahunAjarans = \App\Models\TahunAjaran::orderBy('tahun_mulai', 'desc')->pluck('nama');
+        return view('siswas.edit', compact('siswa', 'tahunAjarans'));
     }
 
     public function update(UpdateSiswaRequest $request, Siswa $siswa)

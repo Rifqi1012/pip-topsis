@@ -24,15 +24,22 @@ Route::middleware(['auth', 'role:tata_usaha'])->group(function () {
 
 Route::middleware(['auth', 'role:kepala_sekolah'])->group(function () {
     Route::get('/kepala-sekolah/dashboard', [\App\Http\Controllers\DashboardController::class, 'index'])->name('kepala-sekolah.dashboard');
-});
-
-Route::middleware('auth')->group(function () {
-    Route::resource('siswas', \App\Http\Controllers\SiswaController::class);
     
+    // Perhitungan TOPSIS (Khusus Kepala Sekolah)
     Route::get('/topsis', [\App\Http\Controllers\TopsisController::class, 'index'])->name('topsis.index');
     Route::post('/topsis/calculate', [\App\Http\Controllers\TopsisController::class, 'calculate'])->name('topsis.calculate');
     Route::get('/topsis/transparansi', [\App\Http\Controllers\TopsisController::class, 'transparansi'])->name('topsis.transparansi');
+});
 
+Route::middleware('auth')->group(function () {
+    Route::resource('tahun-ajaran', \App\Http\Controllers\TahunAjaranController::class)->only(['index', 'store', 'destroy'])->parameters(['tahun-ajaran' => 'tahunAjaran']);
+    Route::resource('siswas', \App\Http\Controllers\SiswaController::class);
+    
+    // Penilaian Siswa Routes (Index & Edit)
+    Route::get('/penilaian-siswa', [\App\Http\Controllers\PenilaianSiswaController::class, 'index'])->name('penilaian-siswa.index');
+    Route::get('/penilaian-siswa/{siswa}/edit', [\App\Http\Controllers\PenilaianSiswaController::class, 'edit'])->name('penilaian-siswa.edit');
+    Route::put('/penilaian-siswa/{siswa}', [\App\Http\Controllers\PenilaianSiswaController::class, 'update'])->name('penilaian-siswa.update');
+    // Move topsis routes to kepala sekolah block
     Route::get('/pengaturan', [\App\Http\Controllers\PengaturanController::class, 'index'])->name('pengaturan.index');
     Route::post('/pengaturan', [\App\Http\Controllers\PengaturanController::class, 'update'])->name('pengaturan.update');
 

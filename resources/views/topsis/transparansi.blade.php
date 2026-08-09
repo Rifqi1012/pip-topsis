@@ -1,10 +1,10 @@
 <x-app-layout>
     <x-slot name="header">
-        Transparansi Perhitungan TOPSIS
+        Transparansi Proses Seleksi
     </x-slot>
 
     <div class="mb-4">
-        <a href="{{ route('topsis.index') }}" class="text-sm text-blue-600 hover:underline">&larr; Kembali ke Ranking</a>
+        <a href="{{ route('topsis.index', ['kelas' => $kelas, 'periode' => $periode]) }}" class="text-sm text-blue-600 hover:underline">&larr; Kembali ke Ranking</a>
     </div>
 
     <!-- 1. Matriks Keputusan (X) -->

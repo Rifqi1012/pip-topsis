@@ -30,7 +30,6 @@ class HasilTopsisExport implements FromCollection, WithHeadings, WithMapping, Sh
             'Kode Siswa',
             'Nama Siswa',
             'Kelas',
-            'Nilai Preferensi',
             'Status Rekomendasi'
         ];
     }
@@ -42,7 +41,6 @@ class HasilTopsisExport implements FromCollection, WithHeadings, WithMapping, Sh
             $row->siswa->kode_siswa ?? '-',
             $row->siswa->nama_siswa ?? 'Siswa Dihapus',
             $row->siswa->kelas ?? '-',
-            number_format($row->nilai_preferensi, 4),
             $row->status_rekomendasi
         ];
     }

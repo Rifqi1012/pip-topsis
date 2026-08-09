@@ -9,18 +9,18 @@
         </div>
 
         <!-- Welcome Box -->
-        <!-- <div class="bg-gradient-to-r from-blue-700 to-blue-500 rounded-xl p-8 mb-8 shadow-lg text-white relative overflow-hidden">
+        <div class="bg-gradient-to-r from-blue-700 to-blue-500 rounded-xl p-8 mb-8 shadow-lg text-white relative overflow-hidden">
             <div class="absolute -right-10 -top-10 w-40 h-40 bg-white opacity-10 rounded-full blur-2xl"></div>
             <div class="absolute right-20 -bottom-10 w-32 h-32 bg-yellow-400 opacity-20 rounded-full blur-xl"></div>
             
             <div class="relative z-10">
                 <h3 class="text-2xl font-bold mb-2 flex items-center gap-2">
-                    Selamat Datang, {{ explode(' ', $user->name)[0] }}! 
+                    Selamat Datang, {{ Auth::user()->name }}! 
                     <span class="text-yellow-300">👋</span>
                 </h3>
                 <p class="text-blue-100 text-lg font-medium max-w-2xl">Sistem Pendukung Keputusan Penerima Program Indonesia Pintar (PIP) menggunakan metode TOPSIS.</p>
             </div>
-        </div> -->
+        </div>
 
         <!-- 4 Cards -->
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
@@ -82,6 +82,7 @@
         </div>
 
         <!-- Info Box -->
+        @if(Auth::user()->role === 'kepala_sekolah')
         <div class="bg-white border border-slate-200 rounded-xl shadow-sm overflow-hidden">
             <div class="border-b border-slate-100 px-8 py-5 bg-slate-50/50">
                 <h3 class="text-lg font-bold text-slate-800 flex items-center gap-2">
@@ -97,7 +98,7 @@
                 <!-- Text -->
                 <div class="flex-1 text-[15px] text-slate-600 leading-relaxed">
                     <p class="mb-2">Proses seleksi penerima bantuan Program Indonesia Pintar (PIP) telah dilakukan menggunakan metode <strong class="text-blue-600">TOPSIS</strong>.</p>
-                    <p>Gunakan menu Perhitungan TOPSIS untuk melihat hasil perankingan dan rekomendasi penerima bantuan secara menyeluruh.</p>
+                    <p>Gunakan menu Proses Seleksi untuk melihat hasil perankingan dan rekomendasi penerima bantuan secara menyeluruh.</p>
                 </div>
                 <!-- Button -->
                 <div class="flex-shrink-0 mt-6 md:mt-0">
@@ -108,5 +109,6 @@
                 </div>
             </div>
         </div>
+        @endif
     </div>
 </x-app-layout>

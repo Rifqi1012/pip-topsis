@@ -20,7 +20,7 @@
             </div>
             
             <div class="mt-8 bg-gray-50 p-6 rounded-lg border border-gray-200">
-                <h4 class="font-semibold text-gray-800 mb-4">Laporan Hasil Perhitungan TOPSIS</h4>
+                <h4 class="font-semibold text-gray-800 mb-4">Laporan Hasil Proses Seleksi</h4>
                 <div class="text-sm text-gray-500 italic">Belum ada data perhitungan yang disetujui.</div>
             </div>
         </div>

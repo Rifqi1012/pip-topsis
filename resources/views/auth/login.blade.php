@@ -85,14 +85,32 @@
 
                 <!-- Password -->
                 <div class="mb-8 group">
-                    <label for="password" class="block font-semibold mb-2 text-slate-700 group-focus-within:text-blue-600 transition-colors">Password</label>
+                    <div class="flex items-center justify-between mb-2">
+                        <label for="password" class="block font-semibold text-slate-700 group-focus-within:text-blue-600 transition-colors">Password</label>
+                        @if (Route::has('password.request'))
+                            <a class="text-xs font-semibold text-blue-600 hover:text-blue-800 hover:underline transition-colors" href="{{ route('password.request') }}">
+                                Lupa Password?
+                            </a>
+                        @endif
+                    </div>
                     <div class="relative shadow-sm">
                         <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
                             <svg class="w-5 h-5 text-slate-400 group-focus-within:text-blue-500 transition-colors" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 16 20">
                                 <path d="M14 7h-1.5V4.5a4.5 4.5 0 1 0-9 0V7H2a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2Zm-5 7a2 2 0 1 1-4 0 2 2 0 0 1 4 0Zm1-7H6V4.5a2.5 2.5 0 1 1 5 0V7Z"/>
                             </svg>
                         </div>
-                        <input type="password" id="password" name="password" class="bg-slate-50 border border-slate-300 text-slate-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 p-3 transition-all" placeholder="Masukkan password" required autocomplete="current-password">
+                        <input type="password" id="password" name="password" class="bg-slate-50 border border-slate-300 text-slate-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 pr-10 p-3 transition-all" placeholder="Masukkan password" required autocomplete="current-password">
+                        <button type="button" id="toggle-password" class="absolute inset-y-0 right-0 flex items-center pr-3 text-slate-400 hover:text-slate-600 focus:outline-none transition-colors" tabindex="-1" title="Tampilkan Password">
+                            <!-- Eye Open -->
+                            <svg id="eye-open" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                            </svg>
+                            <!-- Eye Closed -->
+                            <svg id="eye-closed" class="w-5 h-5 hidden" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21" />
+                            </svg>
+                        </button>
                     </div>
                     <x-input-error :messages="$errors->get('password')" class="mt-2" />
                 </div>
@@ -104,12 +122,26 @@
 
                 <!-- Footer Text -->
                 <div class="mt-8 text-center text-slate-500 px-4 border-t border-slate-200 pt-6 text-xs leading-relaxed">
-                    Sistem ini dilindungi dan diperuntukkan khusus bagi Administrator dan Kepala Sekolah.<br>
+                    Sistem ini dilindungi dan diperuntukkan khusus bagi Administrator (TU), Wali Kelas, dan Kepala Sekolah.<br>
                     Masukkan username dan password Anda untuk melanjutkan.
                 </div>
             </form>
         </div>
     </main>
 
+    <script>
+        document.getElementById('toggle-password')?.addEventListener('click', function () {
+            const input = document.getElementById('password');
+            const eyeOpen = document.getElementById('eye-open');
+            const eyeClosed = document.getElementById('eye-closed');
+            
+            if (input) {
+                const type = input.getAttribute('type') === 'password' ? 'text' : 'password';
+                input.setAttribute('type', type);
+                eyeOpen?.classList.toggle('hidden');
+                eyeClosed?.classList.toggle('hidden');
+            }
+        });
+    </script>
 </body>
 </html>

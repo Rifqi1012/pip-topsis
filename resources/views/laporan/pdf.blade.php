@@ -82,13 +82,27 @@
 
     <div class="info">
         <table border="0">
+            @if(!empty($kelas))
             <tr>
-                <td width="15%"><strong>Tanggal Cetak</strong></td>
+                <td width="18%"><strong>Kelas</strong></td>
+                <td width="2%">:</td>
+                <td>Kelas {{ $kelas }}</td>
+            </tr>
+            @endif
+            @if(!empty($periode))
+            <tr>
+                <td><strong>Periode</strong></td>
+                <td>:</td>
+                <td>{{ $periode }}</td>
+            </tr>
+            @endif
+            <tr>
+                <td width="18%"><strong>Tanggal Cetak</strong></td>
                 <td width="2%">:</td>
                 <td>{{ now()->format('d/m/Y H:i') }}</td>
             </tr>
             <tr>
-                <td><strong>Filter Data</strong></td>
+                <td><strong>Filter Status</strong></td>
                 <td>:</td>
                 <td>{{ ucfirst($filter) }}</td>
             </tr>
@@ -103,11 +117,10 @@
     <table class="data-table">
         <thead>
             <tr>
-                <th width="5%">Rank</th>
+                <th width="8%">Rank</th>
                 <th width="15%">Kode Siswa</th>
-                <th width="35%">Nama Siswa</th>
-                <th width="10%">Kelas</th>
-                <th width="15%">Nilai Preferensi</th>
+                <th width="45%">Nama Siswa</th>
+                <th width="12%">Kelas</th>
                 <th width="20%">Status</th>
             </tr>
         </thead>
@@ -118,7 +131,6 @@
                     <td class="text-center">{{ $h->siswa->kode_siswa ?? '-' }}</td>
                     <td>{{ $h->siswa->nama_siswa ?? 'Siswa Dihapus' }}</td>
                     <td class="text-center">{{ $h->siswa->kelas ?? '-' }}</td>
-                    <td class="text-right">{{ number_format($h->nilai_preferensi, 4) }}</td>
                     <td class="text-center">
                         @if($h->status_rekomendasi == 'Direkomendasikan')
                             <span class="badge-hijau">Direkomendasikan</span>
@@ -129,7 +141,7 @@
                 </tr>
             @empty
                 <tr>
-                    <td colspan="6" class="text-center">Tidak ada data ditemukan.</td>
+                    <td colspan="5" class="text-center">Tidak ada data ditemukan.</td>
                 </tr>
             @endforelse
         </tbody>
