@@ -3,82 +3,87 @@
         Import Data Siswa
     </x-slot>
 
-    <div class="bg-white overflow-hidden shadow-sm sm:rounded-xl border border-gray-100 p-6" x-data="importHandler()">
-        
-        <div class="flex justify-between items-center mb-6">
-            <h3 class="text-xl font-bold text-gray-800">Import Data Siswa (Excel / CSV)</h3>
-            <div class="flex space-x-2">
-                <a href="{{ route('siswa-import.template', 'xlsx') }}" class="text-green-700 bg-green-50 border border-green-200 hover:bg-green-100 font-medium rounded-lg text-sm px-4 py-2 flex items-center transition-colors">
-                    <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
-                    Template Excel
+    <x-page-guide
+        id="siswa_import"
+        title="Cara Import Data Siswa dari Excel / CSV"
+        :steps="['Unduh Template Excel terlebih dahulu', 'Isi data siswa sesuai kolom di template lalu simpan', 'Unggah file di kotak bawah dan klik Baca File', 'Periksa preview data lalu klik Import ke Database']"
+    >
+        Gunakan fitur ini jika ingin memasukkan banyak siswa sekaligus tanpa mengetik satu per satu.
+    </x-page-guide>
+
+    <div class="book-card p-6 sm:p-8" x-data="importHandler()">
+        <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 pb-6 mb-6 border-b border-[#E4DDD0]">
+            <div>
+                <h2 class="font-editorial text-xl font-bold text-[#1C2420]">Unggah File Excel atau CSV</h2>
+                <p class="text-sm text-[#4B5851] mt-1">Format didukung: .xlsx, .xls, atau .csv (maksimal 10 MB).</p>
+            </div>
+            <div class="flex flex-wrap gap-2.5">
+                <a href="{{ route('siswa-import.template', 'xlsx') }}" class="btn-secondary text-xs">
+                    <svg class="w-4 h-4 text-[#1B4D3E]" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
+                    Unduh Template Excel
                 </a>
-                <a href="{{ route('siswa-import.template', 'csv') }}" class="text-blue-700 bg-blue-50 border border-blue-200 hover:bg-blue-100 font-medium rounded-lg text-sm px-4 py-2 flex items-center transition-colors">
-                    <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
-                    Template CSV
+                <a href="{{ route('siswa-import.template', 'csv') }}" class="btn-secondary text-xs">
+                    <svg class="w-4 h-4 text-[#1B4D3E]" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
+                    Unduh Template CSV
                 </a>
             </div>
         </div>
 
         @if(session('error'))
-            <div class="mb-4 bg-red-100 border-l-4 border-red-500 text-red-700 p-4 rounded" role="alert">
-                <p>{{ session('error') }}</p>
+            <div class="mb-6 rounded-xl bg-[#FEE2E2] border-[1.5px] border-[#FCA5A5] text-[#991B1B] p-4 text-sm font-semibold" role="alert">
+                {{ session('error') }}
             </div>
         @endif
 
-        <div class="mb-8">
-            <p class="text-gray-600 mb-4 text-sm">Upload file .xlsx, .xls, atau .csv yang berisi data siswa. Harap gunakan template yang telah disediakan untuk memastikan struktur data yang valid.</p>
-            
-            <form id="uploadForm" @submit.prevent="uploadFile" class="mb-6">
-                @csrf
-                <div class="flex items-center justify-center w-full">
-                    <label for="dropzone-file" class="flex flex-col items-center justify-center w-full h-48 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 hover:bg-gray-100">
-                        <div class="flex flex-col items-center justify-center pt-5 pb-6">
-                            <svg class="w-10 h-10 mb-3 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path></svg>
-                            <p class="mb-2 text-sm text-gray-500"><span class="font-semibold">Click to upload</span> or drag and drop</p>
-                            <p class="text-xs text-gray-500">XLSX, XLS, or CSV (MAX. 10MB)</p>
-                            <p class="text-sm font-medium text-blue-600 mt-2" x-text="fileName"></p>
-                        </div>
-                        <input id="dropzone-file" type="file" name="file" class="hidden" accept=".xlsx,.xls,.csv" @change="fileChanged" required />
-                    </label>
+        <form id="uploadForm" @submit.prevent="uploadFile" class="space-y-5">
+            @csrf
+            <label for="dropzone-file" class="flex flex-col items-center justify-center w-full min-h-[190px] p-6 border-2 border-dashed border-[#C9C0B1] hover:border-[#1B4D3E] rounded-2xl bg-[#FAF7F2] hover:bg-[#F3EFE6] transition-colors text-center">
+                <div class="w-12 h-12 rounded-xl bg-[#E8F1EE] border border-[#B8D4CA] text-[#1B4D3E] flex items-center justify-center mb-3" aria-hidden="true">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path></svg>
                 </div>
-                
-                <div class="mt-4 flex justify-end">
-                    <button type="submit" class="text-white bg-blue-600 hover:bg-blue-700 font-medium rounded-lg text-sm px-5 py-2.5 flex items-center transition-colors" :disabled="loading" :class="{'opacity-50 cursor-not-allowed': loading}">
-                        <span x-show="!loading">Baca File</span>
-                        <span x-show="loading" class="flex items-center">
-                            <svg class="animate-spin -ml-1 mr-3 h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>
-                            Memproses...
-                        </span>
-                    </button>
-                </div>
-            </form>
-        </div>
+                <p class="text-sm font-bold text-[#1C2420]">Klik di sini untuk memilih file dari komputer atau HP</p>
+                <p class="text-xs text-[#4B5851] mt-1">Atau seret file Excel / CSV langsung ke kotak ini</p>
+                <p class="mt-3 px-3 py-1 rounded-lg bg-white border border-[#D6CFC2] text-xs font-bold text-[#1B4D3E]" x-text="fileName"></p>
+                <input id="dropzone-file" type="file" name="file" class="sr-only" accept=".xlsx,.xls,.csv" @change="fileChanged" required />
+            </label>
 
-        <!-- Sheet Selection (Appears after file is parsed) -->
-        <div x-show="sheets.length > 0" x-cloak class="border border-blue-100 bg-blue-50 rounded-lg p-6 animate-fade-in">
-            <h4 class="text-lg font-bold text-blue-800 mb-2">Pilih Sheet yang Ingin Di-import</h4>
-            <p class="text-sm text-blue-600 mb-4">File Excel ini memiliki beberapa sheet. Sistem hanya memproses satu sheet pada satu waktu untuk menghindari kesalahan import kelas.</p>
-            
+            <div class="flex flex-col sm:flex-row justify-between items-stretch sm:items-center gap-3">
+                <a href="{{ route('siswas.index') }}" class="btn-secondary">
+                    &larr; Kembali ke Data Siswa
+                </a>
+                <button type="submit" class="btn-primary" :disabled="loading">
+                    <span x-show="!loading">Baca &amp; Periksa File</span>
+                    <span x-show="loading" x-cloak class="inline-flex items-center gap-2">
+                        <svg class="animate-spin h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" aria-hidden="true"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"></path></svg>
+                        Sedang membaca file...
+                    </span>
+                </button>
+            </div>
+        </form>
+
+        <!-- Sheet Selection -->
+        <div x-show="sheets.length > 0" x-cloak class="mt-8 book-panel p-6">
+            <h3 class="font-editorial text-lg font-bold text-[#1C2420]">Pilih Lembar (Sheet) Excel</h3>
+            <p class="text-sm text-[#4B5851] mt-1 mb-5">Pilih satu sheet yang ingin Anda periksa dan masukkan datanya.</p>
+
             <form action="{{ route('siswa-import.preview') }}" method="POST">
                 @csrf
                 <input type="hidden" name="temp_path" :value="tempPath">
-                
-                <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3 mb-6">
                     <template x-for="(sheet, index) in sheets" :key="index">
-                        <div>
-                            <input type="radio" :id="'sheet_'+index" name="sheet_index" :value="index" class="hidden peer" required>
-                            <label :for="'sheet_'+index" class="inline-flex items-center justify-between w-full p-4 text-gray-500 bg-white border border-gray-200 rounded-lg cursor-pointer peer-checked:border-blue-600 peer-checked:text-blue-600 hover:text-gray-600 hover:bg-gray-50 transition-all">
-                                <div class="block">
-                                    <div class="w-full text-lg font-semibold" x-text="sheet"></div>
-                                </div>
-                            </label>
-                        </div>
+                        <label :for="'sheet_'+index" class="block">
+                            <input type="radio" :id="'sheet_'+index" name="sheet_index" :value="index" class="sr-only peer" required>
+                            <div class="min-h-[52px] p-4 rounded-xl bg-white border-2 border-[#D6CFC2] peer-checked:border-[#1B4D3E] peer-checked:bg-[#E8F1EE] font-bold text-sm text-[#1C2420] hover:border-[#1B4D3E] transition-colors flex items-center justify-between">
+                                <span x-text="sheet" class="truncate"></span>
+                            </div>
+                        </label>
                     </template>
                 </div>
 
                 <div class="flex justify-end">
-                    <button type="submit" class="text-white bg-green-600 hover:bg-green-700 font-medium rounded-lg text-sm px-6 py-2.5 transition-colors">
-                        Lanjut ke Preview & Validasi
+                    <button type="submit" class="btn-primary">
+                        Lanjut ke Pratinjau &amp; Validasi
                     </button>
                 </div>
             </form>
@@ -88,68 +93,58 @@
     <script>
         document.addEventListener('alpine:init', () => {
             Alpine.data('importHandler', () => ({
-                fileName: 'Belum ada file terpilih',
+                fileName: 'Belum ada file dipilih',
                 loading: false,
                 sheets: [],
                 tempPath: '',
-                
+
                 fileChanged(e) {
                     if (e.target.files.length > 0) {
                         this.fileName = e.target.files[0].name;
-                        this.sheets = []; // Reset sheets when new file selected
+                        this.sheets = [];
                     } else {
-                        this.fileName = 'Belum ada file terpilih';
+                        this.fileName = 'Belum ada file dipilih';
                     }
                 },
-                
+
                 uploadFile() {
                     const fileInput = document.getElementById('dropzone-file');
                     if (fileInput.files.length === 0) return;
-                    
+
                     this.loading = true;
                     this.sheets = [];
-                    
+
                     const formData = new FormData();
                     formData.append('file', fileInput.files[0]);
                     formData.append('_token', '{{ csrf_token() }}');
-                    
+
                     fetch('{{ route("siswa-import.get-sheets") }}', {
                         method: 'POST',
                         body: formData,
-                        headers: {
-                            'Accept': 'application/json'
-                        }
+                        headers: { 'Accept': 'application/json' }
                     })
                     .then(response => response.json())
                     .then(data => {
                         this.loading = false;
                         if (data.success) {
                             this.tempPath = data.path;
-                            
-                            // If CSV, automatically submit to preview since it only has 1 sheet
                             if (data.isCsv) {
                                 const form = document.createElement('form');
                                 form.method = 'POST';
                                 form.action = '{{ route("siswa-import.preview") }}';
-                                
-                                const csrfInput = document.createElement('input');
-                                csrfInput.type = 'hidden';
-                                csrfInput.name = '_token';
-                                csrfInput.value = '{{ csrf_token() }}';
-                                form.appendChild(csrfInput);
-                                
-                                const pathInput = document.createElement('input');
-                                pathInput.type = 'hidden';
-                                pathInput.name = 'temp_path';
-                                pathInput.value = this.tempPath;
-                                form.appendChild(pathInput);
-                                
-                                const indexInput = document.createElement('input');
-                                indexInput.type = 'hidden';
-                                indexInput.name = 'sheet_index';
-                                indexInput.value = '0';
-                                form.appendChild(indexInput);
-                                
+
+                                [
+                                    ['_token', '{{ csrf_token() }}'],
+                                    ['temp_path', this.tempPath],
+                                    ['sheet_index', '0'],
+                                ].forEach(([name, value]) => {
+                                    const input = document.createElement('input');
+                                    input.type = 'hidden';
+                                    input.name = name;
+                                    input.value = value;
+                                    form.appendChild(input);
+                                });
+
                                 document.body.appendChild(form);
                                 form.submit();
                             } else {
@@ -161,16 +156,11 @@
                     })
                     .catch(error => {
                         this.loading = false;
-                        alert('Terjadi kesalahan jaringan.');
+                        alert('Terjadi kesalahan jaringan. Silakan coba lagi.');
                         console.error(error);
                     });
                 }
             }));
         });
     </script>
-    <style>
-        [x-cloak] { display: none !important; }
-        .animate-fade-in { animation: fadeIn 0.3s ease-in-out; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
-    </style>
 </x-app-layout>

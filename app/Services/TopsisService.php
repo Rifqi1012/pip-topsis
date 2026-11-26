@@ -2,38 +2,34 @@
 
 namespace App\Services;
 
-use App\Models\Siswa;
-use App\Models\Kriteria;
 use App\Models\HasilTopsis;
-use Illuminate\Support\Facades\DB;
+use App\Models\Kriteria;
+use App\Models\Siswa;
 use Exception;
+use Illuminate\Support\Facades\DB;
 
 class TopsisService
 {
     /**
      * @return array<string, mixed>
-     * @throws Exception
-     */
-    /**
-     * @param bool $saveToDb
-     * @return array<string, mixed>
+     *
      * @throws Exception
      */
     public function calculate(bool $saveToDb = true, ?string $kelas = null, ?string $periode = null): array
     {
-        // 1. Validasi Pra-kondisi
-        $kriterias = Kriteria::orderBy('kode', 'asc')->get();
-        if ($kriterias->count() < 6) {
-            throw new Exception("Data kriteria belum lengkap (minimal C1-C6).");
+        // 1. Validasi Pra-kondisi (Dinamis mengikuti seluruh kriteria di database)
+        $kriterias = Kriteria::orderBy('urutan', 'asc')->orderBy('id', 'asc')->get();
+        if ($kriterias->isEmpty()) {
+            throw new Exception('Belum ada data kriteria yang tersedia. Silakan tambahkan kriteria terlebih dahulu.');
         }
-        
+
         foreach ($kriterias as $k) {
-            if (!$k->bobot || !$k->atribut) {
+            if ($k->bobot < 1 || ! in_array($k->atribut, ['Benefit', 'Cost'])) {
                 throw new Exception("Bobot atau Atribut pada kriteria {$k->kode} belum diatur.");
             }
         }
 
-        $query = Siswa::with(['c1.kriteria', 'c2.kriteria', 'c3.kriteria', 'c4.kriteria', 'c5.kriteria', 'c6.kriteria'])
+        $query = Siswa::with(['penilaians.subKriteria'])
             ->where('status_data', 'submitted');
 
         if ($kelas) {
@@ -44,63 +40,60 @@ class TopsisService
             $query->where('periode', $periode);
         }
 
-        $siswas = $query->get();
+        $siswas = $query->orderBy('id')->get();
 
         if ($siswas->isEmpty()) {
             $msg = "Tidak ada data siswa dengan status 'submitted'";
-            if ($kelas) $msg .= " di Kelas {$kelas}";
-            if ($periode) $msg .= " (Periode: {$periode})";
-            $msg .= " untuk diproses. Pastikan data siswa di kelas dan periode tersebut sudah ada dan berstatus submitted.";
-            throw new Exception($msg);
-        }
-
-        foreach ($siswas as $siswa) {
-            if (!$siswa->c1 || !$siswa->c2 || !$siswa->c3 || !$siswa->c4 || !$siswa->c5 || !$siswa->c6) {
-                throw new Exception("Data penilaian siswa {$siswa->nama_siswa} belum lengkap.");
+            if ($kelas) {
+                $msg .= " di Kelas {$kelas}";
             }
+            if ($periode) {
+                $msg .= " (Periode: {$periode})";
+            }
+            $msg .= ' untuk diproses. Pastikan data siswa di kelas dan periode tersebut sudah ada dan berstatus submitted.';
+            throw new Exception($msg);
         }
 
         // 2. Matriks Keputusan (X)
         $decisionMatrix = [];
-        $criteriaValues = [
-            'C1' => [], 'C2' => [], 'C3' => [], 
-            'C4' => [], 'C5' => [], 'C6' => []
-        ];
+        $criteriaValues = [];
+        foreach ($kriterias as $k) {
+            $criteriaValues[$k->kode] = [];
+        }
 
         foreach ($siswas as $siswa) {
-            $x = [
-                'C1' => $siswa->c1->nilai,
-                'C2' => $siswa->c2->nilai,
-                'C3' => $siswa->c3->nilai,
-                'C4' => $siswa->c4->nilai,
-                'C5' => $siswa->c5->nilai,
-                'C6' => $siswa->c6->nilai,
-            ];
-            $decisionMatrix[$siswa->id] = $x;
+            $penilaianByKriteria = $siswa->penilaians->keyBy('kriteria_id');
+            $x = [];
 
-            foreach ($x as $c => $val) {
-                $criteriaValues[$c][] = $val;
+            foreach ($kriterias as $k) {
+                $penilaian = $penilaianByKriteria->get($k->id);
+                if (! $penilaian || ! $penilaian->subKriteria || $penilaian->subKriteria->kriteria_id !== $k->id) {
+                    throw new Exception("Data penilaian siswa {$siswa->nama_siswa} belum lengkap pada kriteria {$k->nama_kriteria} ({$k->kode}).");
+                }
+                $val = $penilaian->subKriteria->nilai;
+                $x[$k->kode] = $val;
+                $criteriaValues[$k->kode][] = $val;
             }
+
+            $decisionMatrix[$siswa->id] = $x;
         }
 
         // Pembagi Normalisasi per Kriteria: akar(Sigma(x^2))
         $divisors = [];
         foreach ($criteriaValues as $c => $values) {
-            $sumSq = collect($values)->map(fn($v) => pow($v, 2))->sum();
+            $sumSq = collect($values)->map(fn ($v) => pow($v, 2))->sum();
             $divisors[$c] = sqrt($sumSq);
         }
 
         // 3. Matriks Normalisasi (R) & 4. Matriks Normalisasi Terbobot (Y)
         $normalizedMatrix = [];
         $weightedMatrix = [];
-        $weightedCriteriaValues = [
-            'C1' => [], 'C2' => [], 'C3' => [], 
-            'C4' => [], 'C5' => [], 'C6' => []
-        ];
+        $weightedCriteriaValues = [];
+        foreach ($kriterias as $k) {
+            $weightedCriteriaValues[$k->kode] = [];
+        }
 
-        // Mapping bobot & atribut
         $weights = $kriterias->pluck('bobot', 'kode')->toArray();
-        $attributes = $kriterias->pluck('atribut', 'kode')->toArray();
 
         foreach ($decisionMatrix as $id => $x) {
             $r = [];
@@ -108,11 +101,11 @@ class TopsisService
             foreach ($x as $c => $val) {
                 $norm = $divisors[$c] == 0 ? 0 : $val / $divisors[$c];
                 $r[$c] = $norm;
-                
+
                 $weight = $weights[$c] ?? 0;
                 $weighted = $norm * $weight;
                 $y[$c] = $weighted;
-                
+
                 $weightedCriteriaValues[$c][] = $weighted;
             }
             $normalizedMatrix[$id] = $r;
@@ -120,16 +113,13 @@ class TopsisService
         }
 
         // 5 & 6. Solusi Ideal Positif (A+) dan Negatif (A-)
-        // Catatan: Karena skala nilai sub-kriteria (1-5) sudah diatur berbanding lurus dengan kelayakan (nilai 5 paling membutuhkan),
-        // maka pengecekan atribut 'Benefit'/'Cost' diabaikan:
-        // - Solusi Ideal Positif (A+) SELALU mengambil nilai MAX()
-        // - Solusi Ideal Negatif (A-) SELALU mengambil nilai MIN()
         $positiveIdeal = [];
         $negativeIdeal = [];
 
-        foreach ($weightedCriteriaValues as $c => $values) {
-            $positiveIdeal[$c] = collect($values)->max();
-            $negativeIdeal[$c] = collect($values)->min();
+        foreach ($kriterias as $k) {
+            $values = $weightedCriteriaValues[$k->kode];
+            $positiveIdeal[$k->kode] = $k->atribut === 'Cost' ? min($values) : max($values);
+            $negativeIdeal[$k->kode] = $k->atribut === 'Cost' ? max($values) : min($values);
         }
 
         // 7 & 8. Jarak Solusi (D+ dan D-) & 9. Nilai Preferensi (V)
@@ -157,8 +147,8 @@ class TopsisService
         }
 
         // 10. Ranking
-        arsort($preferences); // Sort descending based on preference values
-        
+        arsort($preferences);
+
         $rankings = [];
         $rank = 1;
         $dbData = [];
@@ -182,23 +172,26 @@ class TopsisService
         if ($saveToDb) {
             DB::transaction(function () use ($dbData, $kelas, $periode) {
                 $q = HasilTopsis::query();
-                
+
                 if ($kelas || $periode) {
-                    $q->whereHas('siswa', function($sq) use ($kelas, $periode) {
-                        if ($kelas) $sq->where('kelas', $kelas);
-                        if ($periode) $sq->where('periode', $periode);
+                    $q->whereHas('siswa', function ($sq) use ($kelas, $periode) {
+                        if ($kelas) {
+                            $sq->where('kelas', $kelas);
+                        }
+                        if ($periode) {
+                            $sq->where('periode', $periode);
+                        }
                     });
                 }
-                
+
                 $q->delete();
-                
-                if (!empty($dbData)) {
+
+                if (! empty($dbData)) {
                     HasilTopsis::insert($dbData);
                 }
             });
         }
 
-        // Mapping Data Siswa
         $siswaData = $siswas->keyBy('id');
 
         return [

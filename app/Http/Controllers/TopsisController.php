@@ -2,10 +2,14 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use App\Models\HasilTopsis;
+use App\Models\Kelas;
+use App\Models\Pengaturan;
+use App\Models\Siswa;
+use App\Models\TahunAjaran;
 use App\Services\TopsisService;
 use Exception;
+use Illuminate\Http\Request;
 
 class TopsisController extends Controller
 {
@@ -22,23 +26,26 @@ class TopsisController extends Controller
             abort(403, 'Unauthorized action. Hanya Kepala Sekolah yang dapat melakukan proses seleksi.');
         }
 
-        $kuota = \App\Models\Pengaturan::where('key', 'kuota_penerima')->first()->value ?? 20;
+        $kuota = Pengaturan::where('key', 'kuota_penerima')->first()->value ?? 20;
 
-        $kelasList = collect(['1', '2A', '2B', '3A', '3B', '4', '5', '6']);
+        $kelasList = Kelas::orderBy('nama', 'asc')->pluck('nama');
+        if ($kelasList->isEmpty()) {
+            $kelasList = Siswa::select('kelas')->whereNotNull('kelas')->distinct()->pluck('kelas');
+        }
         $selectedKelas = $request->input('kelas', $kelasList->first());
 
-        $periodeList = \App\Models\TahunAjaran::orderBy('tahun_mulai', 'desc')->pluck('nama');
+        $periodeList = TahunAjaran::orderBy('tahun_mulai', 'desc')->pluck('nama');
         if ($periodeList->isEmpty()) {
-            $periodeList = \App\Models\Siswa::select('periode')->whereNotNull('periode')->distinct()->pluck('periode');
+            $periodeList = Siswa::select('periode')->whereNotNull('periode')->distinct()->pluck('periode');
         }
         $selectedPeriode = $request->input('periode', $periodeList->first());
 
         $selectedStatus = $request->input('status', 'semua');
 
         $query = HasilTopsis::with('siswa.user')->orderBy('ranking', 'asc');
-        
+
         if ($selectedKelas || $selectedPeriode) {
-            $query->whereHas('siswa', function($q) use ($selectedKelas, $selectedPeriode) {
+            $query->whereHas('siswa', function ($q) use ($selectedKelas, $selectedPeriode) {
                 if ($selectedKelas) {
                     $q->where('kelas', $selectedKelas);
                 }
@@ -47,9 +54,9 @@ class TopsisController extends Controller
                 }
             });
         }
-        
+
         $hasil = $query->get();
-        
+
         // Menentukan status rekomendasi
         foreach ($hasil as $h) {
             $h->status_rekomendasi = $h->ranking <= $kuota ? 'Direkomendasikan' : 'Cadangan';
@@ -74,10 +81,16 @@ class TopsisController extends Controller
             abort(403, 'Hanya Kepala Sekolah yang dapat menjalankan perhitungan.');
         }
 
+        $request->validate([
+            'kelas' => 'nullable|string|max:50',
+            'periode' => 'nullable|string|max:100',
+        ]);
+
         try {
             $kelas = $request->input('kelas');
             $periode = $request->input('periode');
             $this->topsisService->calculate(true, $kelas, $periode); // Hitung & Simpan ke DB
+
             return redirect()->route('topsis.index', ['kelas' => $kelas, 'periode' => $periode])->with('success', "Proses Seleksi berhasil diselesaikan untuk Kelas {$kelas} (Periode: {$periode})!");
         } catch (Exception $e) {
             return redirect()->route('topsis.index', ['kelas' => $request->input('kelas'), 'periode' => $request->input('periode')])->with('error', $e->getMessage());
@@ -90,6 +103,11 @@ class TopsisController extends Controller
             abort(403, 'Unauthorized action. Hanya Kepala Sekolah yang dapat mengakses transparansi.');
         }
 
+        $request->validate([
+            'kelas' => 'nullable|string|max:50',
+            'periode' => 'nullable|string|max:100',
+        ]);
+
         try {
             $kelas = $request->input('kelas');
             $periode = $request->input('periode');
@@ -97,6 +115,7 @@ class TopsisController extends Controller
             $data = $this->topsisService->calculate(false, $kelas, $periode);
             $data['kelas'] = $kelas;
             $data['periode'] = $periode;
+
             return view('topsis.transparansi', $data);
         } catch (Exception $e) {
             return redirect()->route('topsis.index')->with('error', $e->getMessage());

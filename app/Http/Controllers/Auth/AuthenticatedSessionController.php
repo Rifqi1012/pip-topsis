@@ -29,9 +29,8 @@ class AuthenticatedSessionController extends Controller
         $request->session()->regenerate();
 
         $role = $request->user()->role;
-        $url = match($role) {
+        $url = match ($role) {
             'wali_kelas' => '/wali-kelas/dashboard',
-            'tata_usaha' => '/tata-usaha/dashboard',
             'kepala_sekolah' => '/kepala-sekolah/dashboard',
             default => '/dashboard',
         };

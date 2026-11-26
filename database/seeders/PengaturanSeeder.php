@@ -2,7 +2,7 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+use App\Models\Pengaturan;
 use Illuminate\Database\Seeder;
 
 class PengaturanSeeder extends Seeder
@@ -12,7 +12,7 @@ class PengaturanSeeder extends Seeder
      */
     public function run(): void
     {
-        \App\Models\Pengaturan::updateOrCreate(
+        Pengaturan::updateOrCreate(
             ['key' => 'kuota_penerima'],
             ['value' => '20']
         );

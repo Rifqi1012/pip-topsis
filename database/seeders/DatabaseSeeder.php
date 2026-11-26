@@ -23,13 +23,6 @@ class DatabaseSeeder extends Seeder
         ]);
 
         User::factory()->create([
-            'name' => 'Tata Usaha',
-            'email' => 'tu@sekolah.com',
-            'password' => bcrypt('password'),
-            'role' => 'tata_usaha',
-        ]);
-
-        User::factory()->create([
             'name' => 'Kepala Sekolah',
             'email' => 'kepsek@sekolah.com',
             'password' => bcrypt('password'),
@@ -37,6 +30,7 @@ class DatabaseSeeder extends Seeder
         ]);
 
         $this->call([
+            KelasSeeder::class,
             KriteriaSeeder::class,
             SubKriteriaSeeder::class,
             PengaturanSeeder::class,

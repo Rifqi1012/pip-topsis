@@ -5,164 +5,61 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <title>Reset Password - PIP TOPSIS</title>
+    <title>Atur Ulang Kata Sandi - SIBATU - Sistem Bantuan Tepat Sasaran</title>
 
-    <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
-    <!-- Scripts -->
     @vite(['resources/css/app.css', 'resources/js/app.js'])
-    
-    <style>
-        body {
-            font-family: 'Inter', sans-serif;
-            font-size: 14px;
-        }
-        .login-title {
-            font-size: 24px;
-            letter-spacing: 0.05em;
-        }
-        .bg-pattern {
-            background-color: #f8fafc;
-            background-image: radial-gradient(#e2e8f0 1px, transparent 1px);
-            background-size: 20px 20px;
-        }
-    </style>
 </head>
-<body class="antialiased text-slate-800 min-h-screen flex flex-col bg-pattern">
-
-    <!-- Header Section -->
-    <header class="w-full flex items-center px-8 py-5 bg-white border-b-4 border-yellow-400 shadow-sm relative z-10">
-        <div class="flex-shrink-0 w-32">
-            @if(file_exists(public_path('images/logo.png')))
-                <img src="{{ asset('images/logo.png') }}" alt="Logo" class="h-30 w-auto drop-shadow-md">
-            @else
-                <div class="w-20 h-20 bg-blue-100 border-2 border-blue-600 rounded-lg flex items-center justify-center font-bold text-blue-800">LOGO</div>
-            @endif
-        </div>
-        <div class="flex-1 text-center pr-32">
-            <h1 class="font-extrabold text-lg md:text-xl lg:text-2xl leading-snug text-slate-800 tracking-tight">
-                SISTEM PENDUKUNG KEPUTUSAN<br>
-                <span class="text-blue-600">PENERIMA PROGRAM INDONESIA PINTAR (PIP)</span><br>
-                METODE TOPSIS
-            </h1>
+<body class="antialiased bg-[#FAF7F2] text-[#1C2420] min-h-screen flex flex-col">
+    <header class="bg-white border-b-2 border-[#D6CFC2] px-6 py-4">
+        <div class="max-w-5xl mx-auto flex items-center justify-between">
+            <a href="{{ route('login') }}" class="flex items-center gap-3">
+                @if(file_exists(public_path('images/logo.png')))
+                    <img src="{{ asset('images/logo.png') }}" alt="Logo Sekolah" width="44" height="44" class="h-11 w-11 object-contain">
+                @endif
+                <div>
+                    <span class="block font-editorial font-bold text-xl text-[#1B4D3E] leading-none">SIBATU</span>
+                    <span class="block text-xs font-semibold text-[#4B5851] mt-0.5">Sistem Bantuan Tepat Sasaran</span>
+                </div>
+            </a>
         </div>
     </header>
 
-    <!-- Main Content -->
     <main class="flex-1 flex items-center justify-center p-6">
-        <div class="w-full max-w-md bg-white border border-slate-200 rounded-xl shadow-xl p-8 pt-6 relative overflow-hidden">
-            <!-- Decorative top accent -->
-            <div class="absolute top-0 left-0 w-full h-1.5 bg-blue-600"></div>
+        <div class="w-full max-w-md book-card p-7 sm:p-9">
+            <h1 class="font-editorial text-2xl font-bold text-[#1C2420]">Buat Kata Sandi Baru</h1>
+            <p class="mt-2 text-sm text-[#4B5851]">Gunakan minimal 8 karakter yang mudah Anda ingat.</p>
 
-            <div class="flex items-center mb-6 mt-2">
-                <div class="flex-1 border-b border-slate-200"></div>
-                <h2 class="px-4 font-extrabold login-title text-slate-800 text-center">RESET<br>PASSWORD</h2>
-                <div class="flex-1 border-b border-slate-200"></div>
-            </div>
-
-            <!-- Session Status -->
-            <x-auth-session-status class="mb-4" :status="session('status')" />
-
-            <form method="POST" action="{{ route('password.store') }}">
+            <form method="POST" action="{{ route('password.store') }}" class="mt-6 space-y-5">
                 @csrf
-
-                <!-- Password Reset Token -->
                 <input type="hidden" name="token" value="{{ $request->route('token') }}">
 
-                <!-- Email Address -->
-                <div class="mb-5 group">
-                    <label for="email" class="block font-semibold mb-2 text-slate-700 group-focus-within:text-blue-600 transition-colors">Email Terdaftar</label>
-                    <div class="relative shadow-sm">
-                        <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
-                            <svg class="w-5 h-5 text-slate-400 group-focus-within:text-blue-500 transition-colors" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 16">
-                                <path d="m10.036 8.278 9.258-7.79A1.979 1.979 0 0 0 18 0H2A1.987 1.987 0 0 0 .641.541l9.395 7.737Z"/>
-                                <path d="M11.241 9.817c-.36.275-.801.425-1.255.427-.428 0-.845-.138-1.187-.395L0 2.6V14a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V2.5l-8.759 7.317Z"/>
-                            </svg>
-                        </div>
-                        <input type="email" id="email" name="email" class="bg-slate-200 border border-slate-300 text-slate-600 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 p-3 transition-all cursor-not-allowed" value="{{ old('email', $request->email) }}" required readonly autocomplete="username">
-                    </div>
+                <div>
+                    <label for="email" class="book-label">Email Terdaftar</label>
+                    <input type="email" id="email" name="email" value="{{ old('email', $request->email) }}" required readonly class="book-input bg-[#F3EFE6] text-[#4B5851]">
                     <x-input-error :messages="$errors->get('email')" class="mt-2" />
                 </div>
 
-                <!-- Password -->
-                <div class="mb-5 group">
-                    <label for="password" class="block font-semibold mb-2 text-slate-700 group-focus-within:text-blue-600 transition-colors">Password Baru</label>
-                    <div class="relative shadow-sm">
-                        <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
-                            <svg class="w-5 h-5 text-slate-400 group-focus-within:text-blue-500 transition-colors" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 16 20">
-                                <path d="M14 7h-1.5V4.5a4.5 4.5 0 1 0-9 0V7H2a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2Zm-5 7a2 2 0 1 1-4 0 2 2 0 0 1 4 0Zm1-7H6V4.5a2.5 2.5 0 1 1 5 0V7Z"/>
-                            </svg>
-                        </div>
-                        <input type="password" id="password" name="password" class="bg-slate-50 border border-slate-300 text-slate-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 pr-10 p-3 transition-all" placeholder="Minimal 8 karakter" required autocomplete="new-password">
-                        <button type="button" id="toggle-password" class="absolute inset-y-0 right-0 flex items-center pr-3 text-slate-400 hover:text-slate-600 focus:outline-none transition-colors" tabindex="-1">
-                            <!-- Eye Open -->
-                            <svg id="eye-open" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
-                            </svg>
-                            <!-- Eye Closed -->
-                            <svg id="eye-closed" class="w-5 h-5 hidden" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21" />
-                            </svg>
-                        </button>
-                    </div>
+                <div>
+                    <label for="password" class="book-label">Kata Sandi Baru</label>
+                    <input type="password" id="password" name="password" required autocomplete="new-password" placeholder="Minimal 8 karakter" class="book-input">
                     <x-input-error :messages="$errors->get('password')" class="mt-2" />
                 </div>
 
-                <!-- Confirm Password -->
-                <div class="mb-8 group">
-                    <label for="password_confirmation" class="block font-semibold mb-2 text-slate-700 group-focus-within:text-blue-600 transition-colors">Konfirmasi Password Baru</label>
-                    <div class="relative shadow-sm">
-                        <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
-                            <svg class="w-5 h-5 text-slate-400 group-focus-within:text-blue-500 transition-colors" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 16 20">
-                                <path d="M14 7h-1.5V4.5a4.5 4.5 0 1 0-9 0V7H2a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2Zm-5 7a2 2 0 1 1-4 0 2 2 0 0 1 4 0Zm1-7H6V4.5a2.5 2.5 0 1 1 5 0V7Z"/>
-                            </svg>
-                        </div>
-                        <input type="password" id="password_confirmation" name="password_confirmation" class="bg-slate-50 border border-slate-300 text-slate-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 pr-10 p-3 transition-all" placeholder="Ulangi password baru" required autocomplete="new-password">
-                        <button type="button" id="toggle-password-confirm" class="absolute inset-y-0 right-0 flex items-center pr-3 text-slate-400 hover:text-slate-600 focus:outline-none transition-colors" tabindex="-1">
-                            <!-- Eye Open -->
-                            <svg id="eye-open-confirm" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
-                            </svg>
-                            <!-- Eye Closed -->
-                            <svg id="eye-closed-confirm" class="w-5 h-5 hidden" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21" />
-                            </svg>
-                        </button>
-                    </div>
+                <div>
+                    <label for="password_confirmation" class="book-label">Ulangi Kata Sandi Baru</label>
+                    <input type="password" id="password_confirmation" name="password_confirmation" required autocomplete="new-password" placeholder="Ketik ulang kata sandi baru" class="book-input">
                     <x-input-error :messages="$errors->get('password_confirmation')" class="mt-2" />
                 </div>
 
-                <!-- Button -->
-                <button type="submit" class="w-full text-white bg-blue-600 hover:bg-blue-700 focus:ring-4 focus:outline-none focus:ring-blue-300 font-bold rounded-lg text-sm px-5 py-3.5 text-center shadow-md hover:shadow-lg transition-all transform active:scale-[0.98]">
-                    SIMPAN PASSWORD BARU
+                <button type="submit" class="btn-primary w-full">
+                    Simpan Kata Sandi Baru
                 </button>
             </form>
         </div>
     </main>
-
-    <script>
-        function setupToggle(buttonId, inputId, eyeOpenId, eyeClosedId) {
-            document.getElementById(buttonId)?.addEventListener('click', function () {
-                const input = document.getElementById(inputId);
-                const eyeOpen = document.getElementById(eyeOpenId);
-                const eyeClosed = document.getElementById(eyeClosedId);
-                
-                if (input) {
-                    const type = input.getAttribute('type') === 'password' ? 'text' : 'password';
-                    input.setAttribute('type', type);
-                    eyeOpen?.classList.toggle('hidden');
-                    eyeClosed?.classList.toggle('hidden');
-                }
-            });
-        }
-
-        setupToggle('toggle-password', 'password', 'eye-open', 'eye-closed');
-        setupToggle('toggle-password-confirm', 'password_confirmation', 'eye-open-confirm', 'eye-closed-confirm');
-    </script>
 </body>
 </html>

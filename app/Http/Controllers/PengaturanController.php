@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use App\Models\Pengaturan;
+use Illuminate\Http\Request;
 
 class PengaturanController extends Controller
 {
@@ -14,6 +14,7 @@ class PengaturanController extends Controller
         }
 
         $kuota = Pengaturan::where('key', 'kuota_penerima')->first()->value ?? 20;
+
         return view('pengaturan.index', compact('kuota'));
     }
 
@@ -24,7 +25,7 @@ class PengaturanController extends Controller
         }
 
         $request->validate([
-            'kuota_penerima' => 'required|integer|min:1'
+            'kuota_penerima' => 'required|integer|min:1',
         ]);
 
         Pengaturan::updateOrCreate(

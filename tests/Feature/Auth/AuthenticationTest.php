@@ -51,4 +51,19 @@ class AuthenticationTest extends TestCase
         $this->assertGuest();
         $response->assertRedirect('/');
     }
+
+    public function test_inactive_users_cannot_log_in(): void
+    {
+        $user = User::factory()->create(['is_active' => false]);
+        $this->post('/login', ['email' => $user->email, 'password' => 'password'])
+            ->assertSessionHasErrors('email');
+        $this->assertGuest();
+    }
+
+    public function test_deactivated_users_are_logged_out_of_existing_sessions(): void
+    {
+        $user = User::factory()->create(['is_active' => false]);
+        $this->actingAs($user)->get('/dashboard')->assertRedirect('/login');
+        $this->assertGuest();
+    }
 }

@@ -4,6 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class UpdateSiswaRequest extends FormRequest
 {
@@ -12,7 +13,7 @@ class UpdateSiswaRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return true;
+        return $this->user()->can('update', $this->route('siswa'));
     }
 
     /**
@@ -23,7 +24,7 @@ class UpdateSiswaRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'nisn' => ['required', 'string', 'max:20', \Illuminate\Validation\Rule::unique('siswas', 'nisn')->ignore($this->route('siswa')->id)->whereNull('deleted_at')],
+            'nisn' => ['required', 'string', 'max:20', Rule::unique('siswas', 'nisn')->ignore($this->route('siswa')->id)->whereNull('deleted_at')],
             'nama_siswa' => 'required|string|max:255',
             'kelas' => 'required|string|max:50',
             'periode' => 'required|string|max:100',

@@ -3,12 +3,11 @@
 namespace Tests\Feature;
 
 use App\Models\User;
+use App\Notifications\CustomResetPassword;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Mail;
-use Illuminate\Support\Facades\Password;
 use Illuminate\Support\Facades\Notification;
-use App\Notifications\CustomResetPassword;
+use Illuminate\Support\Facades\Password;
 use Tests\TestCase;
 
 class ForgotPasswordTest extends TestCase
@@ -20,7 +19,7 @@ class ForgotPasswordTest extends TestCase
         $response = $this->get('/forgot-password');
 
         $response->assertStatus(200);
-        $response->assertSee('KIRIM LINK RESET PASSWORD');
+        $response->assertSee('Kirim Tautan Reset Kata Sandi');
     }
 
     public function test_user_can_submit_email(): void
@@ -37,7 +36,7 @@ class ForgotPasswordTest extends TestCase
 
         $response->assertSessionHasNoErrors();
         $response->assertSessionHas('status', 'Jika email terdaftar, kami telah mengirimkan tautan untuk mengatur ulang password.');
-        
+
         Notification::assertSentTo($user, CustomResetPassword::class);
     }
 
@@ -51,7 +50,7 @@ class ForgotPasswordTest extends TestCase
 
         $response->assertSessionHasNoErrors();
         $response->assertSessionHas('status', 'Jika email terdaftar, kami telah mengirimkan tautan untuk mengatur ulang password.');
-        
+
         Notification::assertNothingSent();
     }
 
@@ -63,7 +62,7 @@ class ForgotPasswordTest extends TestCase
         $response = $this->get('/reset-password/'.$token.'?email='.$user->email);
 
         $response->assertStatus(200);
-        $response->assertSee('SIMPAN PASSWORD BARU');
+        $response->assertSee('Simpan Kata Sandi Baru');
         $response->assertSee($user->email);
     }
 
@@ -86,7 +85,7 @@ class ForgotPasswordTest extends TestCase
 
         $this->assertTrue(Hash::check('new-password', $user->fresh()->password));
         $this->assertFalse(Hash::check('old-password', $user->fresh()->password));
-        
+
         // Ensure user is not auto-logged in
         $this->assertGuest();
     }

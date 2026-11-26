@@ -1,96 +1,96 @@
 <x-app-layout>
     <x-slot name="header">
-        Preview & Validasi Data Import
+        Pratinjau Data Import
     </x-slot>
 
-    <div class="bg-white overflow-hidden shadow-sm sm:rounded-xl border border-gray-100 p-6">
-        <div class="flex justify-between items-center mb-6">
-            <h3 class="text-xl font-bold text-gray-800">Preview Data Siswa</h3>
-            <a href="{{ route('siswa-import.index') }}" class="text-gray-600 bg-white border border-gray-300 hover:bg-gray-50 font-medium rounded-lg text-sm px-4 py-2 transition-colors">
-                Kembali & Upload Ulang
+    <div class="book-card p-6 sm:p-8 space-y-6">
+        <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 pb-5 border-b border-[#E4DDD0]">
+            <div>
+                <h2 class="font-editorial text-xl font-bold text-[#1C2420]">Hasil Pemeriksaan File</h2>
+                <p class="text-sm text-[#4B5851] mt-0.5">Periksa ringkasan di bawah sebelum menyimpan data ke sistem.</p>
+            </div>
+            <a href="{{ route('siswa-import.index') }}" class="btn-secondary text-xs">
+                &larr; Upload Ulang File
             </a>
         </div>
 
-        <!-- Summary Cards -->
-        <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
-            <div class="p-4 rounded-lg bg-gray-50 border border-gray-200">
-                <div class="text-sm font-medium text-gray-500 mb-1">Total Baris Dibaca</div>
-                <div class="text-2xl font-bold text-gray-800">{{ $summary['total'] }}</div>
+        <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
+            <div class="book-panel p-4">
+                <div class="text-xs font-bold uppercase text-[#4B5851]">Total Baris</div>
+                <div class="font-editorial text-3xl font-bold text-[#1C2420] mt-1">{{ $summary['total'] }}</div>
             </div>
-            <div class="p-4 rounded-lg bg-green-50 border border-green-200">
-                <div class="text-sm font-medium text-green-600 mb-1">Data Valid</div>
-                <div class="text-2xl font-bold text-green-700">{{ $summary['valid'] }}</div>
+            <div class="rounded-xl p-4 bg-[#DCFCE7] border border-[#86EFAC]">
+                <div class="text-xs font-bold uppercase text-[#166534]">Data Valid</div>
+                <div class="font-editorial text-3xl font-bold text-[#166534] mt-1">{{ $summary['valid'] }}</div>
             </div>
-            <div class="p-4 rounded-lg {{ $summary['error'] > 0 ? 'bg-red-50 border-red-200' : 'bg-gray-50 border-gray-200' }}">
-                <div class="text-sm font-medium {{ $summary['error'] > 0 ? 'text-red-600' : 'text-gray-500' }} mb-1">Data Error / Invalid</div>
-                <div class="text-2xl font-bold {{ $summary['error'] > 0 ? 'text-red-700' : 'text-gray-800' }}">{{ $summary['error'] }}</div>
+            <div class="rounded-xl p-4 {{ $summary['error'] > 0 ? 'bg-[#FEE2E2] border border-[#FCA5A5]' : 'book-panel' }}">
+                <div class="text-xs font-bold uppercase {{ $summary['error'] > 0 ? 'text-[#991B1B]' : 'text-[#4B5851]' }}">Data Bermasalah</div>
+                <div class="font-editorial text-3xl font-bold {{ $summary['error'] > 0 ? 'text-[#991B1B]' : 'text-[#1C2420]' }} mt-1">{{ $summary['error'] }}</div>
             </div>
-            <div class="p-4 rounded-lg {{ $summary['duplicate'] > 0 ? 'bg-yellow-50 border-yellow-200' : 'bg-gray-50 border-gray-200' }}">
-                <div class="text-sm font-medium {{ $summary['duplicate'] > 0 ? 'text-yellow-700' : 'text-gray-500' }} mb-1">Duplikat NISN</div>
-                <div class="text-2xl font-bold {{ $summary['duplicate'] > 0 ? 'text-yellow-800' : 'text-gray-800' }}">{{ $summary['duplicate'] }}</div>
+            <div class="rounded-xl p-4 {{ $summary['duplicate'] > 0 ? 'bg-[#FEF3C7] border border-[#FCD34D]' : 'book-panel' }}">
+                <div class="text-xs font-bold uppercase {{ $summary['duplicate'] > 0 ? 'text-[#92400E]' : 'text-[#4B5851]' }}">NISN Duplikat</div>
+                <div class="font-editorial text-3xl font-bold {{ $summary['duplicate'] > 0 ? 'text-[#92400E]' : 'text-[#1C2420]' }} mt-1">{{ $summary['duplicate'] }}</div>
             </div>
         </div>
 
         @if(!$summary['can_import'])
-            <div class="mb-6 bg-red-100 border-l-4 border-red-500 text-red-700 p-4 rounded" role="alert">
-                <p class="font-bold">Import Tidak Dapat Dilakukan!</p>
-                <p>Terdapat {{ $summary['error'] }} baris data yang bermasalah. Anda harus memperbaiki file Excel/CSV Anda terlebih dahulu dan mengunggah ulang agar tidak terjadi inkonsistensi data TOPSIS.</p>
+            <div class="rounded-xl bg-[#FEE2E2] border-[1.5px] border-[#FCA5A5] text-[#991B1B] p-5" role="alert">
+                <p class="font-bold text-base">Data Belum Bisa Disimpan</p>
+                <p class="text-sm mt-1">Terdapat {{ $summary['error'] }} baris yang bermasalah. Perbaiki dulu baris bertanda merah di file Excel Anda, lalu unggah ulang.</p>
             </div>
         @else
-            <div class="mb-6 bg-green-100 border-l-4 border-green-500 text-green-700 p-4 rounded flex justify-between items-center" role="alert">
+            <div class="rounded-xl bg-[#E8F1EE] border-[1.5px] border-[#1B4D3E] p-5 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4" role="status">
                 <div>
-                    <p class="font-bold">Seluruh Data Valid!</p>
-                    <p>Semua baris data telah memenuhi syarat dan pemetaan kriteria berhasil. Anda dapat melanjutkan proses import.</p>
+                    <p class="font-bold text-base text-[#1B4D3E]">Semua Data Siap Dimasukkan</p>
+                    <p class="text-sm text-[#2E574A] mt-0.5">Sebanyak {{ $summary['valid'] }} data siswa valid dan siap disimpan.</p>
                 </div>
                 <form action="{{ route('siswa-import.process') }}" method="POST">
                     @csrf
-                    <button type="submit" class="text-white bg-green-600 hover:bg-green-700 font-bold rounded-lg text-sm px-6 py-3 shadow-md transition-colors" onclick="return confirm('Apakah Anda yakin ingin mengimport {{ $summary['valid'] }} data ini?');">
-                        Import {{ $summary['valid'] }} Data ke Database
+                    <button type="submit" class="btn-primary" onclick="return confirm('Simpan {{ $summary['valid'] }} data siswa ini ke database?');">
+                        Simpan {{ $summary['valid'] }} Data Siswa
                     </button>
                 </form>
             </div>
         @endif
 
-        <div class="overflow-x-auto border border-gray-200 rounded-lg">
-            <table class="w-full text-sm text-left text-gray-500 whitespace-nowrap">
-                <thead class="text-xs text-gray-700 uppercase bg-gray-50 border-b">
+        <div class="overflow-x-auto rounded-xl border border-[#D6CFC2]">
+            <table class="book-table whitespace-nowrap">
+                <thead>
                     <tr>
-                        <th scope="col" class="px-4 py-3 text-center">Baris</th>
-                        <th scope="col" class="px-4 py-3">Status</th>
-                        <th scope="col" class="px-4 py-3">Nama / NISN</th>
-                        <th scope="col" class="px-4 py-3">Kelas</th>
-                        <th scope="col" class="px-4 py-3">Tahun Ajaran</th>
-                        <th scope="col" class="px-4 py-3">Pesan Error</th>
+                        <th scope="col" class="text-center">Baris</th>
+                        <th scope="col">Status</th>
+                        <th scope="col">Nama &amp; NISN</th>
+                        <th scope="col">Kelas</th>
+                        <th scope="col">Tahun Ajaran</th>
+                        <th scope="col">Keterangan</th>
                     </tr>
                 </thead>
                 <tbody>
                     @foreach($rows as $row)
-                        <tr class="border-b {{ !$row['is_valid'] ? 'bg-red-50' : 'bg-white hover:bg-gray-50' }}">
-                            <td class="px-4 py-3 text-center font-bold {{ !$row['is_valid'] ? 'text-red-600' : 'text-gray-900' }}">
-                                {{ $row['row_number'] }}
-                            </td>
-                            <td class="px-4 py-3">
+                        <tr class="{{ !$row['is_valid'] ? 'bg-[#FEF2F2]' : '' }}">
+                            <td class="text-center font-bold {{ !$row['is_valid'] ? 'text-[#991B1B]' : 'text-[#1C2420]' }}">{{ $row['row_number'] }}</td>
+                            <td>
                                 @if($row['is_valid'])
-                                    <span class="bg-green-100 text-green-800 text-xs font-medium px-2.5 py-1 rounded">Valid</span>
+                                    <span class="px-2.5 py-1 rounded-lg text-xs font-bold bg-[#DCFCE7] text-[#166534] border border-[#86EFAC]">Valid</span>
                                 @else
-                                    <span class="bg-red-100 text-red-800 text-xs font-medium px-2.5 py-1 rounded">Invalid</span>
+                                    <span class="px-2.5 py-1 rounded-lg text-xs font-bold bg-[#FEE2E2] text-[#991B1B] border border-[#FCA5A5]">Perlu Diperbaiki</span>
                                 @endif
                             </td>
-                            <td class="px-4 py-3">
-                                <div class="font-medium text-gray-900">{{ $row['nama_siswa'] ?: '(Kosong)' }}</div>
-                                <div class="text-xs text-gray-500">{{ $row['nisn'] ?: '-' }}</div>
+                            <td>
+                                <div class="font-bold text-[#1C2420]">{{ $row['nama_siswa'] ?: '(Kosong)' }}</div>
+                                <div class="text-xs text-[#4B5851]">{{ $row['nisn'] ?: '-' }}</div>
                             </td>
-                            <td class="px-4 py-3">{{ $row['kelas'] }}</td>
-                            <td class="px-4 py-3">{{ $row['tahun_ajaran'] }}</td>
-                            <td class="px-4 py-3">
+                            <td>{{ $row['kelas'] }}</td>
+                            <td>{{ $row['tahun_ajaran'] }}</td>
+                            <td>
                                 @if(count($row['errors']) > 0)
-                                    <ul class="list-disc list-inside text-xs text-red-600">
+                                    <ul class="list-disc list-inside text-xs font-semibold text-[#991B1B]">
                                         @foreach($row['errors'] as $error)
                                             <li>{{ $error }}</li>
                                         @endforeach
                                     </ul>
                                 @else
-                                    <span class="text-xs text-gray-400">-</span>
+                                    <span class="text-xs text-[#166534] font-semibold">Siap disimpan</span>
                                 @endif
                             </td>
                         </tr>

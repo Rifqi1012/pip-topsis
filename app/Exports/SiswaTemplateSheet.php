@@ -3,10 +3,10 @@
 namespace App\Exports;
 
 use Maatwebsite\Excel\Concerns\FromArray;
-use Maatwebsite\Excel\Concerns\WithTitle;
 use Maatwebsite\Excel\Concerns\WithHeadings;
+use Maatwebsite\Excel\Concerns\WithTitle;
 
-class SiswaTemplateSheet implements FromArray, WithTitle, WithHeadings
+class SiswaTemplateSheet implements FromArray, WithHeadings, WithTitle
 {
     public function headings(): array
     {
@@ -16,7 +16,7 @@ class SiswaTemplateSheet implements FromArray, WithTitle, WithHeadings
             'Nama Siswa',
             'Kelas',
             'Alamat',
-            'Tahun Ajaran'
+            'Tahun Ajaran',
         ];
     }
 
@@ -29,8 +29,8 @@ class SiswaTemplateSheet implements FromArray, WithTitle, WithHeadings
                 'Contoh Nama Siswa',
                 'Kelas 1',
                 'Jl. Contoh Alamat',
-                '2024/2025'
-            ]
+                '2024/2025',
+            ],
         ];
     }
 

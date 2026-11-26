@@ -1,108 +1,100 @@
 <x-app-layout>
     <x-slot name="header">
-        Detail Data Siswa
+        Detail Siswa
     </x-slot>
 
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <!-- Data Identitas -->
-        <div class="bg-white overflow-hidden shadow-sm sm:rounded-xl border border-gray-100">
-            <div class="p-6 text-gray-900">
-                <div class="flex justify-between items-center mb-4">
-                    <h3 class="text-xl font-bold text-gray-800">Data Identitas</h3>
-                    @if($siswa->status_data === 'submitted')
-                        <span class="bg-green-100 text-green-800 text-xs font-medium px-2.5 py-0.5 rounded border border-green-200">Submitted</span>
-                    @else
-                        <span class="bg-yellow-100 text-yellow-800 text-xs font-medium px-2.5 py-0.5 rounded border border-yellow-200">Draft</span>
-                    @endif
-                </div>
-                
-                <ul class="space-y-4">
-                    <li>
-                        <span class="block text-sm text-gray-500">Kode Siswa</span>
-                        <span class="font-semibold text-lg">{{ $siswa->kode_siswa }}</span>
-                    </li>
-                    <li>
-                        <span class="block text-sm text-gray-500">NISN</span>
-                        <span class="font-semibold">{{ $siswa->nisn ?? '-' }}</span>
-                    </li>
-                    <li>
-                        <span class="block text-sm text-gray-500">Nama Siswa</span>
-                        <span class="font-semibold">{{ $siswa->nama_siswa }}</span>
-                    </li>
-                    <li>
-                        <span class="block text-sm text-gray-500">Kelas</span>
-                        <span class="font-semibold">{{ $siswa->kelas }}</span>
-                    </li>
-                    <li>
-                        <span class="block text-sm text-gray-500">Alamat Lengkap</span>
-                        <span class="font-semibold">{{ $siswa->alamat ?? '-' }}</span>
-                    </li>
-                    <li>
-                        <span class="block text-sm text-gray-500">Wali Kelas Penginput</span>
-                        <span class="font-semibold">{{ $siswa->user->name }}</span>
-                    </li>
-                </ul>
+    <div class="mb-5 flex flex-wrap items-center justify-between gap-3">
+        <a href="{{ url()->previous() !== url()->current() ? url()->previous() : route('siswas.index') }}" class="btn-secondary text-xs">
+            &larr; Kembali
+        </a>
 
-                <div class="mt-8 flex space-x-3">
-                    <a href="{{ url()->previous() !== url()->current() ? url()->previous() : route('siswas.index') }}" onclick="window.history.back(); return false;" class="w-full text-center text-gray-700 bg-white border border-gray-300 hover:bg-gray-50 focus:ring-4 focus:ring-gray-100 font-medium rounded-lg text-sm px-5 py-2.5 transition-colors">Kembali</a>
-                    
-                    @can('update', $siswa)
-                    <a href="{{ route('siswas.edit', $siswa->id) }}" class="w-full text-center text-white bg-blue-600 hover:bg-blue-700 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 transition-colors">Edit Data</a>
-                    @endcan
-                </div>
+        @can('update', $siswa)
+            <div class="flex flex-wrap gap-2">
+                <a href="{{ route('siswas.edit', $siswa->id) }}" class="btn-secondary text-xs">Ubah Identitas</a>
+                <a href="{{ route('penilaian-siswa.edit', $siswa->id) }}" class="btn-primary text-xs">Ubah Penilaian Kriteria</a>
             </div>
+        @endcan
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+        <!-- Data Identitas -->
+        <div class="lg:col-span-5 book-card p-6">
+            <div class="flex items-center justify-between pb-4 mb-5 border-b border-[#E4DDD0]">
+                <h2 class="font-editorial text-xl font-bold text-[#1C2420]">Identitas Siswa</h2>
+                @if($siswa->status_data === 'submitted')
+                    <span class="px-2.5 py-1 rounded-lg text-xs font-bold bg-[#DCFCE7] text-[#166534] border border-[#86EFAC]">Siap Seleksi</span>
+                @else
+                    <span class="px-2.5 py-1 rounded-lg text-xs font-bold bg-[#FEF3C7] text-[#92400E] border border-[#FCD34D]">Draft</span>
+                @endif
+            </div>
+
+            <dl class="space-y-4 text-sm">
+                <div class="flex justify-between gap-4 border-b border-[#F3EFE6] pb-3">
+                    <dt class="text-[#4B5851] font-medium">Kode Siswa</dt>
+                    <dd class="font-bold text-[#1B4D3E]">{{ $siswa->kode_siswa }}</dd>
+                </div>
+                <div class="flex justify-between gap-4 border-b border-[#F3EFE6] pb-3">
+                    <dt class="text-[#4B5851] font-medium">NISN</dt>
+                    <dd class="font-bold text-[#1C2420]">{{ $siswa->nisn ?? '-' }}</dd>
+                </div>
+                <div class="flex justify-between gap-4 border-b border-[#F3EFE6] pb-3">
+                    <dt class="text-[#4B5851] font-medium">Nama Lengkap</dt>
+                    <dd class="font-bold text-[#1C2420] text-right">{{ $siswa->nama_siswa }}</dd>
+                </div>
+                <div class="flex justify-between gap-4 border-b border-[#F3EFE6] pb-3">
+                    <dt class="text-[#4B5851] font-medium">Kelas / Periode</dt>
+                    <dd class="font-bold text-[#1C2420]">Kelas {{ $siswa->kelas }} ({{ $siswa->periode ?? '-' }})</dd>
+                </div>
+                <div class="border-b border-[#F3EFE6] pb-3">
+                    <dt class="text-[#4B5851] font-medium mb-1">Alamat Lengkap</dt>
+                    <dd class="font-semibold text-[#1C2420]">{{ $siswa->alamat ?? '-' }}</dd>
+                </div>
+                <div class="flex justify-between gap-4">
+                    <dt class="text-[#4B5851] font-medium">Wali Kelas</dt>
+                    <dd class="font-bold text-[#1C2420]">{{ $siswa->user->name }}</dd>
+                </div>
+            </dl>
         </div>
 
         <!-- Data Penilaian -->
-        <div class="bg-white overflow-hidden shadow-sm sm:rounded-xl border border-gray-100">
-            <div class="p-6 text-gray-900">
-                <h3 class="text-xl font-bold text-gray-800 mb-4">Data Penilaian</h3>
-                
-                <ul class="space-y-4">
-                    <li class="border-b pb-3">
-                        <span class="block text-sm font-semibold text-gray-700">Pekerjaan Ayah ({{ $siswa->c1->kriteria->kode ?? 'C1' }})</span>
-                        <div class="flex justify-between items-end mt-1">
-                            <span class="text-gray-600">{{ $siswa->c1->nama_sub_kriteria }}</span>
-                            <span class="font-bold text-blue-600">Nilai: {{ $siswa->c1->nilai }}</span>
-                        </div>
-                    </li>
-                    <li class="border-b pb-3">
-                        <span class="block text-sm font-semibold text-gray-700">Penghasilan Ayah ({{ $siswa->c2->kriteria->kode ?? 'C2' }})</span>
-                        <div class="flex justify-between items-end mt-1">
-                            <span class="text-gray-600">{{ $siswa->c2->nama_sub_kriteria }}</span>
-                            <span class="font-bold text-blue-600">Nilai: {{ $siswa->c2->nilai }}</span>
-                        </div>
-                    </li>
-                    <li class="border-b pb-3">
-                        <span class="block text-sm font-semibold text-gray-700">Pekerjaan Ibu ({{ $siswa->c3->kriteria->kode ?? 'C3' }})</span>
-                        <div class="flex justify-between items-end mt-1">
-                            <span class="text-gray-600">{{ $siswa->c3->nama_sub_kriteria }}</span>
-                            <span class="font-bold text-blue-600">Nilai: {{ $siswa->c3->nilai }}</span>
-                        </div>
-                    </li>
-                    <li class="border-b pb-3">
-                        <span class="block text-sm font-semibold text-gray-700">Penghasilan Ibu ({{ $siswa->c4->kriteria->kode ?? 'C4' }})</span>
-                        <div class="flex justify-between items-end mt-1">
-                            <span class="text-gray-600">{{ $siswa->c4->nama_sub_kriteria }}</span>
-                            <span class="font-bold text-blue-600">Nilai: {{ $siswa->c4->nilai }}</span>
-                        </div>
-                    </li>
-                    <li class="border-b pb-3">
-                        <span class="block text-sm font-semibold text-gray-700">Jumlah Tanggungan Keluarga ({{ $siswa->c5->kriteria->kode ?? 'C5' }})</span>
-                        <div class="flex justify-between items-end mt-1">
-                            <span class="text-gray-600">{{ $siswa->c5->nama_sub_kriteria }}</span>
-                            <span class="font-bold text-blue-600">Nilai: {{ $siswa->c5->nilai }}</span>
-                        </div>
-                    </li>
-                    <li class="pb-1">
-                        <span class="block text-sm font-semibold text-gray-700">Status Siswa ({{ $siswa->c6->kriteria->kode ?? 'C6' }})</span>
-                        <div class="flex justify-between items-end mt-1">
-                            <span class="text-gray-600">{{ $siswa->c6->nama_sub_kriteria }}</span>
-                            <span class="font-bold text-blue-600">Nilai: {{ $siswa->c6->nilai }}</span>
-                        </div>
-                    </li>
-                </ul>
+        <div class="lg:col-span-7 book-card p-6">
+            <div class="pb-4 mb-5 border-b border-[#E4DDD0]">
+                <h2 class="font-editorial text-xl font-bold text-[#1C2420]">Hasil Penilaian Kriteria</h2>
+                <p class="text-xs text-[#4B5851] mt-0.5">Nilai ini digunakan langsung dalam perhitungan seleksi TOPSIS.</p>
             </div>
+
+            <ul class="space-y-3">
+                @forelse($kriterias as $kriteria)
+                    @php
+                        $penilaian = $penilaians->get($kriteria->id);
+                    @endphp
+                    <li class="book-panel p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                        <div>
+                            <span class="inline-block text-xs font-bold text-[#1B4D3E] bg-[#E8F1EE] border border-[#B8D4CA] px-2 py-0.5 rounded mr-1.5">{{ $kriteria->kode }}</span>
+                            <span class="text-sm font-bold text-[#1C2420]">{{ $kriteria->nama_kriteria }}</span>
+                            <div class="mt-1 text-sm text-[#4B5851]">
+                                @if($penilaian && $penilaian->subKriteria)
+                                    {{ $penilaian->subKriteria->nama_sub_kriteria }}
+                                @else
+                                    <span class="italic text-[#92400E]">Belum dinilai</span>
+                                @endif
+                            </div>
+                        </div>
+
+                        @if($penilaian && $penilaian->subKriteria)
+                            <span class="inline-flex items-center px-3 py-1.5 rounded-lg bg-white border border-[#D6CFC2] text-xs font-bold text-[#1B4D3E] self-start sm:self-center whitespace-nowrap">
+                                Nilai {{ $penilaian->subKriteria->nilai }} ({{ $penilaian->subKriteria->label_nilai }})
+                            </span>
+                        @else
+                            <span class="inline-flex items-center px-3 py-1.5 rounded-lg bg-[#FEF3C7] border border-[#FCD34D] text-xs font-bold text-[#92400E] self-start sm:self-center">
+                                Kosong
+                            </span>
+                        @endif
+                    </li>
+                @empty
+                    <li class="text-sm text-[#4B5851]">Belum ada kriteria penilaian.</li>
+                @endforelse
+            </ul>
         </div>
     </div>
 </x-app-layout>

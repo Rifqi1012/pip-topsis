@@ -77,7 +77,7 @@
             <img src="{{ public_path('images/logo.png') }}" class="logo" alt="Logo Sekolah">
         @endif
         <h1 class="title">LAPORAN HASIL PERHITUNGAN PIP</h1>
-        <p class="subtitle">Sistem Pendukung Keputusan Penentuan Penerima Bantuan PIP Metode TOPSIS</p>
+        <p class="subtitle">SIBATU - Sistem Bantuan Tepat Sasaran (Metode TOPSIS)</p>
     </div>
 
     <div class="info">

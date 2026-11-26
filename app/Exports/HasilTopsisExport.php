@@ -3,13 +3,13 @@
 namespace App\Exports;
 
 use Maatwebsite\Excel\Concerns\FromCollection;
+use Maatwebsite\Excel\Concerns\ShouldAutoSize;
 use Maatwebsite\Excel\Concerns\WithHeadings;
 use Maatwebsite\Excel\Concerns\WithMapping;
-use Maatwebsite\Excel\Concerns\ShouldAutoSize;
 use Maatwebsite\Excel\Concerns\WithStyles;
 use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
 
-class HasilTopsisExport implements FromCollection, WithHeadings, WithMapping, ShouldAutoSize, WithStyles
+class HasilTopsisExport implements FromCollection, ShouldAutoSize, WithHeadings, WithMapping, WithStyles
 {
     protected $hasil;
 
@@ -30,7 +30,7 @@ class HasilTopsisExport implements FromCollection, WithHeadings, WithMapping, Sh
             'Kode Siswa',
             'Nama Siswa',
             'Kelas',
-            'Status Rekomendasi'
+            'Status Rekomendasi',
         ];
     }
 
@@ -41,7 +41,7 @@ class HasilTopsisExport implements FromCollection, WithHeadings, WithMapping, Sh
             $row->siswa->kode_siswa ?? '-',
             $row->siswa->nama_siswa ?? 'Siswa Dihapus',
             $row->siswa->kelas ?? '-',
-            $row->status_rekomendasi
+            $row->status_rekomendasi,
         ];
     }
 

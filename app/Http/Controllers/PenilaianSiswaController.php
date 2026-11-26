@@ -2,10 +2,15 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Siswa;
+use App\Models\Kelas;
 use App\Models\Kriteria;
-use Illuminate\Http\Request;
+use App\Models\PenilaianSiswa;
+use App\Models\Siswa;
+use App\Models\TahunAjaran;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Validation\Rule;
 
 class PenilaianSiswaController extends Controller
 {
@@ -13,26 +18,25 @@ class PenilaianSiswaController extends Controller
 
     public function index(Request $request)
     {
-        // Only allow Wali Kelas or Tata Usaha
-        if (!in_array(auth()->user()->role, ['wali_kelas', 'tata_usaha'])) {
+        if (! in_array(auth()->user()->role, ['wali_kelas', 'kepala_sekolah'])) {
             abort(403, 'Unauthorized action.');
         }
 
-        $query = Siswa::with(['user', 'c1', 'c2', 'c3', 'c4', 'c5', 'c6']);
-        
+        $query = Siswa::with(['user', 'penilaians']);
+
         if (auth()->user()->role === 'wali_kelas') {
             $query->where('user_id', auth()->id());
         }
 
         if ($request->filled('search')) {
             $search = $request->search;
-            $query->where(function($q) use ($search) {
+            $query->where(function ($q) use ($search) {
                 $q->where('nama_siswa', 'like', "%{$search}%")
-                  ->orWhere('kode_siswa', 'like', "%{$search}%")
-                  ->orWhere('nisn', 'like', "%{$search}%");
+                    ->orWhere('kode_siswa', 'like', "%{$search}%")
+                    ->orWhere('nisn', 'like', "%{$search}%");
             });
         }
-        
+
         if ($request->filled('kelas')) {
             $query->where('kelas', $request->kelas);
         }
@@ -41,49 +45,83 @@ class PenilaianSiswaController extends Controller
             $query->where('periode', $request->periode);
         }
 
+        if ($request->filled('wali_kelas_id') && auth()->user()->role === 'kepala_sekolah') {
+            $query->where('user_id', $request->wali_kelas_id);
+        }
+
         $siswas = $query->orderBy('created_at', 'desc')->paginate(10)->withQueryString();
-        $kelasList = collect(['1', '2A', '2B', '3A', '3B', '4', '5', '6']);
-        $periodeList = \App\Models\TahunAjaran::orderBy('tahun_mulai', 'desc')->pluck('nama');
+        $kelasList = Kelas::orderBy('nama', 'asc')->pluck('nama');
+        if ($kelasList->isEmpty()) {
+            $kelasList = Siswa::select('kelas')->whereNotNull('kelas')->distinct()->pluck('kelas');
+        }
+        $periodeList = TahunAjaran::orderBy('tahun_mulai', 'desc')->pluck('nama');
         if ($periodeList->isEmpty()) {
             $periodeList = Siswa::select('periode')->whereNotNull('periode')->distinct()->pluck('periode');
         }
 
-        return view('penilaian-siswa.index', compact('siswas', 'kelasList', 'periodeList'));
+        $kriteriaIds = Kriteria::pluck('id');
+        $totalKriteria = $kriteriaIds->count();
+
+        return view('penilaian-siswa.index', compact('siswas', 'kelasList', 'periodeList', 'kriteriaIds', 'totalKriteria'));
     }
 
     public function edit(Siswa $siswa)
     {
-        // Similar authorization as Siswa update
         $this->authorize('update', $siswa);
 
-        $c1 = Kriteria::where('kode', 'C1')->first()->subKriterias;
-        $c2 = Kriteria::where('kode', 'C2')->first()->subKriterias;
-        $c3 = Kriteria::where('kode', 'C3')->first()->subKriterias;
-        $c4 = Kriteria::where('kode', 'C4')->first()->subKriterias;
-        $c5 = Kriteria::where('kode', 'C5')->first()->subKriterias;
-        $c6 = Kriteria::where('kode', 'C6')->first()->subKriterias;
+        $kriterias = Kriteria::with('subKriterias')
+            ->orderBy('urutan', 'asc')
+            ->orderBy('id', 'asc')
+            ->get();
 
-        return view('penilaian-siswa.edit', compact('siswa', 'c1', 'c2', 'c3', 'c4', 'c5', 'c6'));
+        $existingPenilaian = $siswa->penilaians()
+            ->pluck('sub_kriteria_id', 'kriteria_id')
+            ->toArray();
+
+        return view('penilaian-siswa.edit', compact('siswa', 'kriterias', 'existingPenilaian'));
     }
 
     public function update(Request $request, Siswa $siswa)
     {
         $this->authorize('update', $siswa);
 
-        $validated = $request->validate([
-            'c1_id' => 'required|exists:sub_kriterias,id',
-            'c2_id' => 'required|exists:sub_kriterias,id',
-            'c3_id' => 'required|exists:sub_kriterias,id',
-            'c4_id' => 'required|exists:sub_kriterias,id',
-            'c5_id' => 'required|exists:sub_kriterias,id',
-            'c6_id' => 'required|exists:sub_kriterias,id',
-        ], [
-            'required' => 'Kriteria ini wajib diisi.',
-            'exists' => 'Pilihan kriteria tidak valid.'
-        ]);
+        $kriterias = Kriteria::orderBy('urutan', 'asc')->orderBy('id', 'asc')->get();
 
-        $siswa->update($validated);
+        if ($kriterias->isEmpty()) {
+            return redirect()->route('penilaian-siswa.index')
+                ->with('error', 'Belum ada kriteria yang dikonfigurasi oleh Kepala Sekolah.');
+        }
 
-        return redirect()->route('penilaian-siswa.index')->with('success', 'Data penilaian kriteria siswa berhasil disimpan.');
+        $rules = [];
+        $messages = [];
+        foreach ($kriterias as $kriteria) {
+            $key = "penilaian.{$kriteria->id}";
+            $rules[$key] = [
+                'required',
+                Rule::exists('sub_kriterias', 'id')->where('kriteria_id', $kriteria->id),
+            ];
+            $messages["{$key}.required"] = "Kriteria {$kriteria->nama_kriteria} ({$kriteria->kode}) wajib diisi.";
+            $messages["{$key}.exists"] = "Pilihan untuk {$kriteria->nama_kriteria} tidak valid.";
+        }
+
+        $validated = $request->validate($rules, $messages);
+
+        DB::transaction(function () use ($siswa, $kriterias, $validated) {
+            foreach ($kriterias as $kriteria) {
+                $subKriteriaId = $validated['penilaian'][$kriteria->id];
+                PenilaianSiswa::updateOrCreate(
+                    [
+                        'siswa_id' => $siswa->id,
+                        'kriteria_id' => $kriteria->id,
+                    ],
+                    [
+                        'sub_kriteria_id' => $subKriteriaId,
+                    ]
+                );
+            }
+        });
+
+        return redirect()->route('penilaian-siswa.index')
+            ->with('success', 'Data penilaian kriteria siswa berhasil disimpan.');
     }
 }

@@ -3,6 +3,7 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+use App\Notifications\CustomResetPassword;
 use Database\Factories\UserFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -12,6 +13,11 @@ class User extends Authenticatable
 {
     /** @use HasFactory<UserFactory> */
     use HasFactory, Notifiable;
+
+    protected $attributes = [
+        'role' => 'wali_kelas',
+        'is_active' => true,
+    ];
 
     /**
      * The attributes that are mass assignable.
@@ -46,9 +52,10 @@ class User extends Authenticatable
         return [
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
+            'is_active' => 'boolean',
         ];
     }
-    
+
     /**
      * Send the password reset notification.
      *
@@ -57,6 +64,6 @@ class User extends Authenticatable
      */
     public function sendPasswordResetNotification($token)
     {
-        $this->notify(new \App\Notifications\CustomResetPassword($token));
+        $this->notify(new CustomResetPassword($token));
     }
 }

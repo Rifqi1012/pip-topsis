@@ -1,106 +1,118 @@
 <x-app-layout>
     <x-slot name="header">
-        Kelola User
+        Kelola Akun Pengguna
     </x-slot>
 
-    <div class="mb-6 flex justify-between items-center bg-blue-50 p-4 rounded-lg border border-blue-100">
-        <div>
-            <h2 class="text-xl font-bold text-blue-900">Data Pengguna Sistem</h2>
-            <p class="text-sm text-blue-700">Kelola akses akun Tata Usaha dan Wali Kelas.</p>
-        </div>
-        <a href="{{ route('users.create') }}" class="text-white bg-blue-600 hover:bg-blue-700 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 transition-colors flex items-center">
-            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path></svg>
-            Tambah User
-        </a>
-    </div>
+    <x-page-guide
+        id="users_index"
+        title="Mengelola Akun Wali Kelas & Kepala Sekolah"
+        :steps="['Klik Tambah Akun untuk membuat akun guru baru', 'Gunakan Nonaktifkan jika guru sudah tidak bertugas tanpa menghapus riwayat data']"
+    >
+        Anda dapat menambah akun baru, mengatur ulang kata sandi guru yang lupa, atau menonaktifkan akun kapan saja.
+    </x-page-guide>
 
-    <div class="bg-white overflow-hidden shadow-sm sm:rounded-xl border border-gray-100 mb-6">
-        <div class="p-6 border-b border-gray-100">
-            <form action="{{ route('users.index') }}" method="GET" class="flex flex-col md:flex-row gap-4">
+    <div class="book-card overflow-hidden">
+        <div class="p-5 sm:p-6 border-b border-[#E4DDD0] flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+            <div>
+                <h2 class="font-editorial text-lg font-bold text-[#1C2420]">Daftar Pengguna SIBATU</h2>
+                <p class="text-xs text-[#4B5851] mt-0.5">Total {{ $users->total() }} akun terdaftar.</p>
+            </div>
+            <a href="{{ route('users.create') }}" class="btn-primary">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
+                Tambah Akun Baru
+            </a>
+        </div>
+
+        <!-- Search & Filter -->
+        <div class="p-5 sm:p-6 bg-[#FAF7F2] border-b border-[#E4DDD0]">
+            <form action="{{ route('users.index') }}" method="GET" class="flex flex-col sm:flex-row gap-3 items-stretch sm:items-end">
                 <div class="flex-1">
-                    <input type="text" name="search" value="{{ request('search') }}" placeholder="Cari nama atau email..." class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
+                    <label for="user-search" class="book-label text-xs">Cari Nama atau Email</label>
+                    <input id="user-search" type="text" name="search" value="{{ request('search') }}" placeholder="Ketik nama atau email..." class="book-input text-sm">
                 </div>
-                <div class="w-full md:w-64">
-                    <select name="role" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" onchange="this.form.submit()">
-                        <option value="">Semua Role</option>
-                        <option value="tata_usaha" {{ request('role') == 'tata_usaha' ? 'selected' : '' }}>Tata Usaha</option>
+                <div class="sm:w-56">
+                    <label for="user-role" class="book-label text-xs">Filter Peran</label>
+                    <select id="user-role" name="role" class="book-input text-sm" onchange="this.form.submit()">
+                        <option value="">Semua Peran</option>
+                        <option value="kepala_sekolah" {{ request('role') == 'kepala_sekolah' ? 'selected' : '' }}>Kepala Sekolah</option>
                         <option value="wali_kelas" {{ request('role') == 'wali_kelas' ? 'selected' : '' }}>Wali Kelas</option>
                     </select>
                 </div>
-                <div>
-                    <button type="submit" class="w-full md:w-auto text-white bg-slate-600 hover:bg-slate-700 focus:ring-4 focus:ring-slate-300 font-medium rounded-lg text-sm px-5 py-2.5 transition-colors">
-                        Cari
-                    </button>
+                <div class="flex gap-2">
+                    <button type="submit" class="btn-primary flex-1 sm:flex-none">Cari</button>
+                    <a href="{{ route('users.index') }}" class="btn-secondary flex-1 sm:flex-none">Reset</a>
                 </div>
             </form>
         </div>
 
         <div class="overflow-x-auto">
-            <table class="w-full text-sm text-left text-gray-500">
-                <thead class="text-xs text-gray-700 uppercase bg-gray-50 border-b">
+            <table class="book-table">
+                <thead>
                     <tr>
-                        <th scope="col" class="px-6 py-3">Nama</th>
-                        <th scope="col" class="px-6 py-3">Email</th>
-                        <th scope="col" class="px-6 py-3">Role</th>
-                        <th scope="col" class="px-6 py-3 text-center">Status</th>
-                        <th scope="col" class="px-6 py-3 text-center">Aksi</th>
+                        <th scope="col">Nama Pengguna</th>
+                        <th scope="col">Email</th>
+                        <th scope="col">Peran</th>
+                        <th scope="col" class="text-center">Status</th>
+                        <th scope="col" class="text-right">Aksi</th>
                     </tr>
                 </thead>
                 <tbody>
                     @forelse ($users as $user)
-                        <tr class="bg-white border-b hover:bg-gray-50 transition-colors {{ !$user->is_active ? 'opacity-60 bg-gray-50' : '' }}">
-                            <td class="px-6 py-4 font-medium text-gray-900">
+                        <tr class="{{ !$user->is_active ? 'opacity-70 bg-[#FAF7F2]' : '' }}">
+                            <td class="font-bold text-[#1C2420]">
                                 {{ $user->name }}
                                 @if(Auth::id() === $user->id)
-                                    <span class="ml-2 bg-blue-100 text-blue-800 text-xs font-semibold px-2.5 py-0.5 rounded">Anda</span>
+                                    <span class="ml-2 px-2 py-0.5 rounded text-[11px] font-bold bg-[#E8F1EE] text-[#1B4D3E] border border-[#B8D4CA]">Anda</span>
                                 @endif
                             </td>
-                            <td class="px-6 py-4">{{ $user->email }}</td>
-                            <td class="px-6 py-4">
-                                @if($user->role === 'tata_usaha')
-                                    <span class="bg-purple-100 text-purple-800 text-xs font-medium px-2.5 py-0.5 rounded border border-purple-200">Tata Usaha</span>
-                                @elseif($user->role === 'wali_kelas')
-                                    <span class="bg-indigo-100 text-indigo-800 text-xs font-medium px-2.5 py-0.5 rounded border border-indigo-200">Wali Kelas</span>
+                            <td class="text-[#4B5851] font-medium">{{ $user->email }}</td>
+                            <td class="whitespace-nowrap">
+                                @if($user->role === 'kepala_sekolah')
+                                    <span class="px-2.5 py-1 rounded-lg text-xs font-bold bg-[#E8F1EE] text-[#1B4D3E] border border-[#B8D4CA]">Kepala Sekolah</span>
                                 @else
-                                    <span class="bg-gray-100 text-gray-800 text-xs font-medium px-2.5 py-0.5 rounded border border-gray-200">{{ ucfirst($user->role) }}</span>
+                                    <span class="px-2.5 py-1 rounded-lg text-xs font-bold bg-[#FEF3C7] text-[#92400E] border border-[#FCD34D]">Wali Kelas</span>
                                 @endif
                             </td>
-                            <td class="px-6 py-4 text-center">
+                            <td class="text-center whitespace-nowrap">
                                 @if($user->is_active)
-                                    <span class="bg-green-100 text-green-800 text-xs font-medium px-2.5 py-0.5 rounded border border-green-200">Aktif</span>
+                                    <span class="px-2.5 py-1 rounded-lg text-xs font-bold bg-[#DCFCE7] text-[#166534] border border-[#86EFAC]">Aktif</span>
                                 @else
-                                    <span class="bg-red-100 text-red-800 text-xs font-medium px-2.5 py-0.5 rounded border border-red-200">Nonaktif</span>
+                                    <span class="px-2.5 py-1 rounded-lg text-xs font-bold bg-[#FEE2E2] text-[#991B1B] border border-[#FCA5A5]">Nonaktif</span>
                                 @endif
                             </td>
-                            <td class="px-6 py-4 text-center">
-                                <a href="{{ route('users.edit', $user->id) }}" class="text-blue-600 hover:text-blue-900 font-medium">Edit</a>
-                                
-                                @if(Auth::id() !== $user->id)
-                                    <span class="text-gray-300 mx-1">|</span>
-                                    <form action="{{ route('users.toggle-status', $user->id) }}" method="POST" class="inline" onsubmit="return confirm('Apakah Anda yakin ingin {{ $user->is_active ? 'menonaktifkan' : 'mengaktifkan' }} user ini?');">
-                                        @csrf
-                                        @method('PATCH')
-                                        <button type="submit" class="{{ $user->is_active ? 'text-red-600 hover:text-red-900' : 'text-green-600 hover:text-green-900' }} font-medium bg-transparent border-0 p-0 cursor-pointer">
-                                            {{ $user->is_active ? 'Nonaktifkan' : 'Aktifkan' }}
-                                        </button>
-                                    </form>
-                                @endif
+                            <td class="text-right whitespace-nowrap">
+                                <div class="inline-flex items-center gap-2">
+                                    <a href="{{ route('users.edit', $user->id) }}" class="inline-flex items-center px-3 py-1.5 rounded-lg text-xs font-bold text-[#92400E] bg-[#FEF3C7] hover:bg-[#FDE68A] border border-[#FCD34D] min-h-[36px]">
+                                        Ubah
+                                    </a>
+
+                                    @if(Auth::id() !== $user->id)
+                                        <form action="{{ route('users.toggle-status', $user->id) }}" method="POST" class="inline" onsubmit="return confirm('Apakah Anda yakin ingin {{ $user->is_active ? 'menonaktifkan' : 'mengaktifkan' }} akun {{ $user->name }}?');">
+                                            @csrf
+                                            @method('PATCH')
+                                            <button type="submit" class="{{ $user->is_active ? 'btn-danger-soft' : 'inline-flex items-center px-3 py-1.5 rounded-lg text-xs font-bold text-[#166534] bg-[#DCFCE7] hover:bg-[#BBF7D0] border border-[#86EFAC] min-h-[36px]' }}">
+                                                {{ $user->is_active ? 'Nonaktifkan' : 'Aktifkan' }}
+                                            </button>
+                                        </form>
+                                    @endif
+                                </div>
                             </td>
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="5" class="px-6 py-8 text-center text-gray-500">
-                                Tidak ada data user yang ditemukan.
+                            <td colspan="5" class="py-10 text-center text-[#4B5851]">
+                                Tidak ada akun pengguna yang sesuai dengan pencarian.
                             </td>
                         </tr>
                     @endforelse
                 </tbody>
             </table>
         </div>
+
         @if($users->hasPages())
-        <div class="p-4 border-t border-gray-100">
-            {{ $users->links() }}
-        </div>
+            <div class="p-4 sm:px-6 border-t border-[#E4DDD0] bg-[#FAF7F2]">
+                {{ $users->links() }}
+            </div>
         @endif
     </div>
 </x-app-layout>

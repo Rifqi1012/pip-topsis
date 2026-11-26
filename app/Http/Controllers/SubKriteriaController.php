@@ -2,46 +2,47 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\SubKriteria;
 use App\Models\Kriteria;
-use App\Http\Requests\UpdateSubKriteriaRequest;
+use App\Models\SubKriteria;
 use Illuminate\Http\Request;
 
 class SubKriteriaController extends Controller
 {
-    public function index(Request $request)
+    public function store(Request $request, Kriteria $kriteria)
     {
-        $search = $request->input('search');
-        
-        $subKriterias = SubKriteria::with('kriteria')
-            ->when($search, function ($query) use ($search) {
-                $query->where('nama_sub_kriteria', 'like', "%{$search}%")
-                      ->orWhereHas('kriteria', function ($q) use ($search) {
-                          $q->where('nama_kriteria', 'like', "%{$search}%");
-                      });
-            })
-            ->orderBy('kriteria_id')
-            ->orderBy('nilai', 'desc')
-            ->paginate(10)
-            ->withQueryString();
+        $validated = $request->validate([
+            'nama_sub_kriteria' => 'required|string|max:255',
+            'nilai' => 'required|integer|min:1|max:5',
+        ]);
 
-        return view('sub_kriteria.index', compact('subKriterias', 'search'));
+        $kriteria->subKriterias()->create($validated);
+
+        return redirect()->route('kriteria.index')
+            ->with('success', "Sub-kriteria berhasil ditambahkan ke {$kriteria->nama_kriteria} ({$kriteria->kode}).")
+            ->with('open_kriteria', $kriteria->id);
     }
 
-    public function show(SubKriteria $subKriteria)
+    public function update(Request $request, SubKriteria $subKriteria)
     {
-        $subKriteria->load('kriteria');
-        return view('sub_kriteria.show', compact('subKriteria'));
+        $validated = $request->validate([
+            'nama_sub_kriteria' => 'required|string|max:255',
+            'nilai' => 'required|integer|min:1|max:5',
+        ]);
+
+        $subKriteria->update($validated);
+
+        return redirect()->route('kriteria.index')
+            ->with('success', 'Sub-kriteria berhasil diperbarui!')
+            ->with('open_kriteria', $subKriteria->kriteria_id);
     }
 
-    public function edit(SubKriteria $subKriteria)
+    public function destroy(SubKriteria $subKriteria)
     {
-        return view('sub_kriteria.edit', compact('subKriteria'));
-    }
+        $kriteriaId = $subKriteria->kriteria_id;
+        $subKriteria->delete();
 
-    public function update(UpdateSubKriteriaRequest $request, SubKriteria $subKriteria)
-    {
-        $subKriteria->update($request->validated());
-        return redirect()->route('sub_kriteria.index')->with('success', 'Sub Kriteria berhasil diupdate!');
+        return redirect()->route('kriteria.index')
+            ->with('success', 'Sub-kriteria berhasil dihapus.')
+            ->with('open_kriteria', $kriteriaId);
     }
 }

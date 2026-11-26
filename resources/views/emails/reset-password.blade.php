@@ -3,7 +3,7 @@
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-    <title>Reset Password - Sistem PIP SDN 115 Turangga</title>
+    <title>Reset Password - SIBATU - Sistem Bantuan Tepat Sasaran</title>
 </head>
 <body style="font-family: Arial, 'Helvetica Neue', Helvetica, sans-serif; background-color: #f8fafc; margin: 0; padding: 0;">
     <div style="background-color: #f8fafc; padding: 40px 20px; text-align: center;">
@@ -12,7 +12,7 @@
             <tr>
                 <td style="background-color: #ffffff; padding: 30px; text-align: center; border-bottom: 2px solid #f1f5f9;">
                     <img src="{{ $message->embed(public_path('images/logo.png')) }}" alt="SDN 115 Turangga" style="max-height: 80px; width: auto; display: block; margin: 0 auto;">
-                    <h2 style="color: #1e293b; font-size: 20px; font-weight: 600; margin: 20px 0 0 0;">Sistem PIP SDN 115 Turangga</h2>
+                    <h2 style="color: #1e293b; font-size: 20px; font-weight: 600; margin: 20px 0 0 0;">SIBATU - Sistem Bantuan Tepat Sasaran</h2>
                 </td>
             </tr>
             <!-- Body -->
@@ -41,7 +41,7 @@
         <table align="center" width="100%" cellpadding="0" cellspacing="0" style="max-width: 600px; margin: 0 auto;">
             <tr>
                 <td style="padding: 20px; text-align: center; font-size: 12px; color: #64748b;">
-                    <p style="margin: 0;">&copy; {{ date('Y') }} Sistem PIP SDN 115 Turangga. Semua hak cipta dilindungi.</p>
+                    <p style="margin: 0;">&copy; {{ date('Y') }} SIBATU - Sistem Bantuan Tepat Sasaran. Semua hak cipta dilindungi.</p>
                 </td>
             </tr>
         </table>

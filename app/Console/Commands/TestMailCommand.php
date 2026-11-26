@@ -2,10 +2,10 @@
 
 namespace App\Console\Commands;
 
-use Illuminate\Console\Command;
-use Illuminate\Support\Facades\Mail;
-use Illuminate\Mail\Message;
 use Exception;
+use Illuminate\Console\Command;
+use Illuminate\Mail\Message;
+use Illuminate\Support\Facades\Mail;
 
 class TestMailCommand extends Command
 {
@@ -31,20 +31,20 @@ class TestMailCommand extends Command
         $email = $this->argument('email');
 
         $this->info("Attempting to send a test email to: {$email}");
-        $this->info("Using Mailer: " . config('mail.default'));
-        $this->info("Host: " . config('mail.mailers.smtp.host'));
-        $this->info("Port: " . config('mail.mailers.smtp.port'));
+        $this->info('Using Mailer: '.config('mail.default'));
+        $this->info('Host: '.config('mail.mailers.smtp.host'));
+        $this->info('Port: '.config('mail.mailers.smtp.port'));
 
         try {
-            Mail::raw('This is a test email sent from the ' . config('app.name') . ' application to verify your SMTP configuration.', function (Message $message) use ($email) {
+            Mail::raw('This is a test email sent from the '.config('app.name').' application to verify your SMTP configuration.', function (Message $message) use ($email) {
                 $message->to($email)
-                        ->subject('SMTP Test - ' . config('app.name'));
+                    ->subject('SMTP Test - '.config('app.name'));
             });
 
             $this->info('✅ Test email sent successfully! Please check your inbox.');
         } catch (Exception $e) {
             $this->error('❌ Failed to send test email.');
-            $this->error('Error Message: ' . $e->getMessage());
+            $this->error('Error Message: '.$e->getMessage());
         }
     }
 }

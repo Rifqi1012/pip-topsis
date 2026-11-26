@@ -9,8 +9,8 @@ class SiswaTemplateExport implements WithMultipleSheets
     public function sheets(): array
     {
         return [
-            new SiswaTemplateSheet(),
-            new PetunjukTemplateSheet()
+            new SiswaTemplateSheet,
+            new PetunjukTemplateSheet,
         ];
     }
 }

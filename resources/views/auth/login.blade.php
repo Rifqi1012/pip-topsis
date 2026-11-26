@@ -5,127 +5,145 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <title>Login - PIP TOPSIS</title>
+    <title>Masuk - SIBATU - Sistem Bantuan Tepat Sasaran</title>
 
-    <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
-    <!-- Scripts -->
     @vite(['resources/css/app.css', 'resources/js/app.js'])
-    
-    <style>
-        body {
-            font-family: 'Inter', sans-serif;
-            font-size: 14px;
-        }
-        .login-title {
-            font-size: 24px;
-            letter-spacing: 0.05em;
-        }
-        .bg-pattern {
-            background-color: #f8fafc;
-            background-image: radial-gradient(#e2e8f0 1px, transparent 1px);
-            background-size: 20px 20px;
-        }
-    </style>
 </head>
-<body class="antialiased text-slate-800 min-h-screen flex flex-col bg-pattern">
+<body class="antialiased bg-[#FAF7F2] text-[#1C2420] min-h-screen flex flex-col">
+    <main class="flex-1 grid grid-cols-1 lg:grid-cols-12 min-h-screen">
+        <!-- Left Identity Panel -->
+        <section class="lg:col-span-5 bg-[#1B4D3E] text-white p-8 sm:p-12 flex flex-col justify-between border-b-2 lg:border-b-0 lg:border-r-2 border-[#143B2F]">
+            <div>
+                <div class="flex items-center gap-4">
+                    @if(file_exists(public_path('images/logo.png')))
+                        <div class="w-16 h-16 rounded-2xl bg-white p-2 flex items-center justify-center border-2 border-[#D6CFC2] flex-shrink-0">
+                            <img src="{{ asset('images/logo.png') }}" alt="Logo Sekolah" width="52" height="52" fetchpriority="high" class="w-full h-full object-contain">
+                        </div>
+                    @else
+                        <div class="w-16 h-16 rounded-2xl bg-[#FDE68A] text-[#1B4D3E] flex items-center justify-center font-editorial font-bold text-3xl flex-shrink-0">S</div>
+                    @endif
+                    <div>
+                        <p class="text-xs font-bold uppercase tracking-wider text-[#FDE68A]">Portal Sekolah</p>
+                        <h1 class="font-editorial text-3xl font-bold text-white leading-tight">SIBATU</h1>
+                    </div>
+                </div>
 
-    <!-- Header Section -->
-    <header class="w-full flex items-center px-8 py-5 bg-white border-b-4 border-yellow-400 shadow-sm relative z-10">
-        <div class="flex-shrink-0 w-32">
-            @if(file_exists(public_path('images/logo.png')))
-                <img src="{{ asset('images/logo.png') }}" alt="Logo" class="h-30 w-auto drop-shadow-md">
-            @else
-                <div class="w-20 h-20 bg-blue-100 border-2 border-blue-600 rounded-lg flex items-center justify-center font-bold text-blue-800">LOGO</div>
-            @endif
-        </div>
-        <div class="flex-1 text-center pr-32">
-            <h1 class="font-extrabold text-lg md:text-xl lg:text-2xl leading-snug text-slate-800 tracking-tight">
-                SISTEM PENDUKUNG KEPUTUSAN<br>
-                <span class="text-blue-600">PENERIMA PROGRAM INDONESIA PINTAR (PIP)</span><br>
-            </h1>
-        </div>
-    </header>
+                <div class="mt-10 max-w-md">
+                    <p class="font-editorial text-2xl sm:text-3xl font-semibold text-white leading-snug">
+                        Sistem Bantuan Tepat Sasaran untuk Seleksi Siswa yang Adil dan Terukur.
+                    </p>
+                    <p class="mt-4 text-sm sm:text-base text-[#D8E7E1] leading-relaxed">
+                        Dirancang agar Wali Kelas dan Kepala Sekolah dapat mencatat data siswa, mengisi penilaian, hingga menentukan penerima bantuan tanpa proses yang rumit.
+                    </p>
+                </div>
 
-    <!-- Main Content -->
-    <main class="flex-1 flex items-center justify-center p-6">
-        <div class="w-full max-w-md bg-white border border-slate-200 rounded-xl shadow-xl p-8 pt-6 relative overflow-hidden">
-            <!-- Decorative top accent -->
-            <div class="absolute top-0 left-0 w-full h-1.5 bg-blue-600"></div>
-
-            <div class="flex items-center mb-8 mt-2">
-                <div class="flex-1 border-b border-slate-200"></div>
-                <h2 class="px-4 font-extrabold login-title text-slate-800">LOGIN</h2>
-                <div class="flex-1 border-b border-slate-200"></div>
+                <ol class="mt-8 space-y-3 max-w-md">
+                    <li class="flex items-start gap-3 bg-[#143B2F] border border-[#2C6B57] rounded-xl p-3.5">
+                        <span class="w-6 h-6 rounded-full bg-[#FDE68A] text-[#1C2420] font-bold text-xs flex items-center justify-center flex-shrink-0 mt-0.5">1</span>
+                        <span class="text-sm text-[#EDF5F2]">Input atau unggah data siswa dengan pilihan kelas yang terstandar.</span>
+                    </li>
+                    <li class="flex items-start gap-3 bg-[#143B2F] border border-[#2C6B57] rounded-xl p-3.5">
+                        <span class="w-6 h-6 rounded-full bg-[#FDE68A] text-[#1C2420] font-bold text-xs flex items-center justify-center flex-shrink-0 mt-0.5">2</span>
+                        <span class="text-sm text-[#EDF5F2]">Nilai setiap siswa berdasarkan kriteria yang transparan dan mudah dipilih.</span>
+                    </li>
+                    <li class="flex items-start gap-3 bg-[#143B2F] border border-[#2C6B57] rounded-xl p-3.5">
+                        <span class="w-6 h-6 rounded-full bg-[#FDE68A] text-[#1C2420] font-bold text-xs flex items-center justify-center flex-shrink-0 mt-0.5">3</span>
+                        <span class="text-sm text-[#EDF5F2]">Hasil perankingan otomatis siap diunduh dalam format PDF dan Excel.</span>
+                    </li>
+                </ol>
             </div>
 
-            <!-- Session Status -->
-            <x-auth-session-status class="mb-4" :status="session('status')" />
+            <p class="mt-10 text-xs text-[#C0D6CE]">
+                &copy; {{ date('Y') }} SIBATU - Sistem Bantuan Tepat Sasaran
+            </p>
+        </section>
 
-            <form method="POST" action="{{ route('login') }}">
-                @csrf
+        <!-- Right Login Form -->
+        <section class="lg:col-span-7 flex items-center justify-center p-6 sm:p-10 lg:p-14">
+            <div class="w-full max-w-md">
+                <div class="book-card p-7 sm:p-9">
+                    <div class="mb-7">
+                        <h2 class="font-editorial text-2xl sm:text-3xl font-bold text-[#1C2420]">Masuk ke Akun</h2>
+                        <p class="mt-1.5 text-sm text-[#4B5851]">
+                            Masukkan email dan kata sandi yang diberikan oleh Kepala Sekolah.
+                        </p>
+                    </div>
 
-                <!-- Username (Email) -->
-                <div class="mb-6 group">
-                    <label for="email" class="block font-semibold mb-2 text-slate-700 group-focus-within:text-blue-600 transition-colors">Username</label>
-                    <div class="relative shadow-sm">
-                        <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
-                            <svg class="w-5 h-5 text-slate-400 group-focus-within:text-blue-500 transition-colors" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
-                                <path d="M10 0a10 10 0 1 0 10 10A10.011 10.011 0 0 0 10 0Zm0 5a3 3 0 1 1 0 6 3 3 0 0 1 0-6Zm0 13a8.949 8.949 0 0 1-4.951-1.488A3.987 3.987 0 0 1 9 13h2a3.987 3.987 0 0 1 3.951 3.512A8.949 8.949 0 0 1 10 18Z"/>
-                            </svg>
+                    <x-auth-session-status class="mb-5" :status="session('status')" />
+
+                    <form method="POST" action="{{ route('login') }}" class="space-y-5">
+                        @csrf
+
+                        <div>
+                            <label for="email" class="book-label">Alamat Email</label>
+                            <input
+                                type="email"
+                                id="email"
+                                name="email"
+                                value="{{ old('email') }}"
+                                required
+                                autofocus
+                                autocomplete="username"
+                                placeholder="nama@sekolah.com"
+                                class="book-input"
+                            >
+                            <x-input-error :messages="$errors->get('email')" class="mt-2" />
                         </div>
-                        <input type="email" id="email" name="email" class="bg-slate-50 border border-slate-300 text-slate-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 p-3 transition-all" placeholder="Masukkan username" value="{{ old('email') }}" required autofocus autocomplete="username">
-                    </div>
-                    <x-input-error :messages="$errors->get('email')" class="mt-2" />
-                </div>
 
-                <!-- Password -->
-                <div class="mb-8 group">
-                    <div class="flex items-center justify-between mb-2">
-                        <label for="password" class="block font-semibold text-slate-700 group-focus-within:text-blue-600 transition-colors">Password</label>
-                        @if (Route::has('password.request'))
-                            <a class="text-xs font-semibold text-blue-600 hover:text-blue-800 hover:underline transition-colors" href="{{ route('password.request') }}">
-                                Lupa Password?
-                            </a>
-                        @endif
-                    </div>
-                    <div class="relative shadow-sm">
-                        <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
-                            <svg class="w-5 h-5 text-slate-400 group-focus-within:text-blue-500 transition-colors" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 16 20">
-                                <path d="M14 7h-1.5V4.5a4.5 4.5 0 1 0-9 0V7H2a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2Zm-5 7a2 2 0 1 1-4 0 2 2 0 0 1 4 0Zm1-7H6V4.5a2.5 2.5 0 1 1 5 0V7Z"/>
-                            </svg>
+                        <div>
+                            <div class="flex items-center justify-between mb-1.5">
+                                <label for="password" class="book-label !mb-0">Kata Sandi</label>
+                                @if (Route::has('password.request'))
+                                    <a href="{{ route('password.request') }}" class="text-xs font-bold text-[#1B4D3E] hover:underline">
+                                        Lupa kata sandi?
+                                    </a>
+                                @endif
+                            </div>
+                            <div class="relative">
+                                <input
+                                    type="password"
+                                    id="password"
+                                    name="password"
+                                    required
+                                    autocomplete="current-password"
+                                    placeholder="Masukkan kata sandi Anda"
+                                    class="book-input pr-12"
+                                >
+                                <button
+                                    type="button"
+                                    id="toggle-password"
+                                    aria-label="Tampilkan atau sembunyikan kata sandi"
+                                    class="absolute inset-y-0 right-0 flex items-center justify-center w-11 text-[#4B5851] hover:text-[#1C2420]"
+                                >
+                                    <svg id="eye-open" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                                    </svg>
+                                    <svg id="eye-closed" class="w-5 h-5 hidden" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21" />
+                                    </svg>
+                                </button>
+                            </div>
+                            <x-input-error :messages="$errors->get('password')" class="mt-2" />
                         </div>
-                        <input type="password" id="password" name="password" class="bg-slate-50 border border-slate-300 text-slate-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 pr-10 p-3 transition-all" placeholder="Masukkan password" required autocomplete="current-password">
-                        <button type="button" id="toggle-password" class="absolute inset-y-0 right-0 flex items-center pr-3 text-slate-400 hover:text-slate-600 focus:outline-none transition-colors" tabindex="-1" title="Tampilkan Password">
-                            <!-- Eye Open -->
-                            <svg id="eye-open" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
-                            </svg>
-                            <!-- Eye Closed -->
-                            <svg id="eye-closed" class="w-5 h-5 hidden" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21" />
-                            </svg>
-                        </button>
+
+                        <div class="pt-2">
+                            <button type="submit" class="btn-primary w-full text-base py-3">
+                                Masuk Sekarang
+                            </button>
+                        </div>
+                    </form>
+
+                    <div class="mt-7 pt-5 border-t border-[#EAE4D8] text-xs text-[#4B5851] leading-relaxed">
+                        Akses ini khusus untuk <strong>Wali Kelas</strong> dan <strong>Kepala Sekolah</strong>. Jika belum memiliki akun atau lupa email, silakan hubungi Kepala Sekolah.
                     </div>
-                    <x-input-error :messages="$errors->get('password')" class="mt-2" />
                 </div>
-
-                <!-- Button -->
-                <button type="submit" class="w-full text-white bg-blue-600 hover:bg-blue-700 focus:ring-4 focus:outline-none focus:ring-blue-300 font-bold rounded-lg text-sm px-5 py-3.5 text-center shadow-md hover:shadow-lg transition-all transform active:scale-[0.98]">
-                    LOGIN SEKARANG
-                </button>
-
-                <!-- Footer Text -->
-                <div class="mt-8 text-center text-slate-500 px-4 border-t border-slate-200 pt-6 text-xs leading-relaxed">
-                    Sistem ini dilindungi dan diperuntukkan khusus bagi Administrator (TU), Wali Kelas, dan Kepala Sekolah.<br>
-                    Masukkan username dan password Anda untuk melanjutkan.
-                </div>
-            </form>
-        </div>
+            </div>
+        </section>
     </main>
 
     <script>
@@ -133,10 +151,9 @@
             const input = document.getElementById('password');
             const eyeOpen = document.getElementById('eye-open');
             const eyeClosed = document.getElementById('eye-closed');
-            
             if (input) {
-                const type = input.getAttribute('type') === 'password' ? 'text' : 'password';
-                input.setAttribute('type', type);
+                const isPassword = input.getAttribute('type') === 'password';
+                input.setAttribute('type', isPassword ? 'text' : 'password');
                 eyeOpen?.classList.toggle('hidden');
                 eyeClosed?.classList.toggle('hidden');
             }

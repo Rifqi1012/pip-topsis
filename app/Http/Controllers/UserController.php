@@ -11,7 +11,7 @@ class UserController extends Controller
 {
     public function index(Request $request)
     {
-        if (auth()->user()->role !== 'tata_usaha') {
+        if (auth()->user()->role !== 'kepala_sekolah') {
             abort(403, 'Unauthorized action.');
         }
 
@@ -19,12 +19,12 @@ class UserController extends Controller
 
         if ($request->filled('search')) {
             $search = $request->search;
-            $query->where(function($q) use ($search) {
+            $query->where(function ($q) use ($search) {
                 $q->where('name', 'like', "%{$search}%")
-                  ->orWhere('email', 'like', "%{$search}%");
+                    ->orWhere('email', 'like', "%{$search}%");
             });
         }
-        
+
         if ($request->filled('role')) {
             $query->where('role', $request->role);
         }
@@ -36,7 +36,7 @@ class UserController extends Controller
 
     public function create()
     {
-        if (auth()->user()->role !== 'tata_usaha') {
+        if (auth()->user()->role !== 'kepala_sekolah') {
             abort(403, 'Unauthorized action.');
         }
 
@@ -45,7 +45,7 @@ class UserController extends Controller
 
     public function store(Request $request)
     {
-        if (auth()->user()->role !== 'tata_usaha') {
+        if (auth()->user()->role !== 'kepala_sekolah') {
             abort(403, 'Unauthorized action.');
         }
 
@@ -53,7 +53,7 @@ class UserController extends Controller
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
             'password' => ['required', 'string', 'min:8', 'confirmed'],
-            'role' => ['required', 'in:tata_usaha,wali_kelas'],
+            'role' => ['required', 'in:kepala_sekolah,wali_kelas'],
         ]);
 
         User::create([
@@ -69,7 +69,7 @@ class UserController extends Controller
 
     public function edit(User $user)
     {
-        if (auth()->user()->role !== 'tata_usaha') {
+        if (auth()->user()->role !== 'kepala_sekolah') {
             abort(403, 'Unauthorized action.');
         }
 
@@ -78,14 +78,14 @@ class UserController extends Controller
 
     public function update(Request $request, User $user)
     {
-        if (auth()->user()->role !== 'tata_usaha') {
+        if (auth()->user()->role !== 'kepala_sekolah') {
             abort(403, 'Unauthorized action.');
         }
 
         $request->validate([
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255', Rule::unique('users')->ignore($user->id)],
-            'role' => ['required', 'in:tata_usaha,wali_kelas'],
+            'role' => ['required', 'in:kepala_sekolah,wali_kelas'],
             'password' => ['nullable', 'string', 'min:8', 'confirmed'],
         ]);
 
@@ -106,7 +106,7 @@ class UserController extends Controller
 
     public function toggleStatus(User $user)
     {
-        if (auth()->user()->role !== 'tata_usaha') {
+        if (auth()->user()->role !== 'kepala_sekolah') {
             abort(403, 'Unauthorized action.');
         }
 
@@ -114,9 +114,10 @@ class UserController extends Controller
             return redirect()->back()->with('error', 'Anda tidak dapat menonaktifkan akun Anda sendiri.');
         }
 
-        $user->update(['is_active' => !$user->is_active]);
+        $user->update(['is_active' => ! $user->is_active]);
 
         $status = $user->is_active ? 'diaktifkan' : 'dinonaktifkan';
+
         return redirect()->back()->with('success', "Akun user berhasil {$status}.");
     }
 }

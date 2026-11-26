@@ -1,3 +1,249 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer base {
+    :root {
+        --sibatu-paper: #FAF7F2;
+        --sibatu-surface: #FFFFFF;
+        --sibatu-tint: #F3EFE6;
+        --sibatu-ink: #1C2420;
+        --sibatu-muted: #4B5851;
+        --sibatu-forest: #1B4D3E;
+        --sibatu-forest-dark: #143B2F;
+        --sibatu-forest-soft: #E8F1EE;
+        --sibatu-amber: #D97706;
+        --sibatu-amber-dark: #B45309;
+        --sibatu-amber-soft: #FEF3C7;
+        --sibatu-border: #D6CFC2;
+    }
+
+    html {
+        font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+        color: var(--sibatu-ink);
+        background-color: var(--sibatu-paper);
+        -webkit-font-smoothing: antialiased;
+    }
+
+    a[href],
+    button,
+    summary,
+    select,
+    label[for],
+    input[type="radio"],
+    input[type="checkbox"],
+    [role="button"],
+    [role="tab"],
+    [role="switch"] {
+        cursor: pointer;
+    }
+
+    button:disabled,
+    input:disabled,
+    select:disabled,
+    textarea:disabled,
+    [aria-disabled="true"] {
+        cursor: not-allowed;
+    }
+
+    a:focus-visible,
+    button:focus-visible,
+    input:focus-visible,
+    select:focus-visible,
+    textarea:focus-visible,
+    summary:focus-visible,
+    [tabindex]:focus-visible {
+        outline: 2.5px solid #D97706;
+        outline-offset: 2px;
+    }
+}
+
+@layer components {
+    .font-editorial {
+        font-family: 'Fraunces', Georgia, serif;
+    }
+
+    /* Tactile Workbook Card */
+    .book-card {
+        background-color: #FFFFFF;
+        border: 1.5px solid #D6CFC2;
+        border-radius: 1rem;
+        box-shadow: 0 3px 0 0 #E4DDD0;
+    }
+
+    .book-panel {
+        background-color: #F3EFE6;
+        border: 1.5px solid #D6CFC2;
+        border-radius: 0.875rem;
+    }
+
+    /* Primary Tactile Button (Forest Green with crisp pressable edge) */
+    .btn-primary {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.5rem;
+        min-height: 44px;
+        padding: 0.625rem 1.25rem;
+        background-color: #1B4D3E;
+        color: #FFFFFF;
+        font-weight: 700;
+        font-size: 0.875rem;
+        border: 1.5px solid #143B2F;
+        border-radius: 0.75rem;
+        box-shadow: 0 3px 0 0 #102D24;
+        transition: transform 0.12s ease, background-color 0.12s ease, box-shadow 0.12s ease;
+    }
+    .btn-primary:hover {
+        background-color: #143B2F;
+    }
+    .btn-primary:active {
+        transform: translateY(2px);
+        box-shadow: 0 1px 0 0 #102D24;
+    }
+    .btn-primary:disabled {
+        opacity: 0.55;
+        transform: none;
+    }
+
+    /* Accent Tactile Button (Warm Amber for key highlight actions) */
+    .btn-accent {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.5rem;
+        min-height: 44px;
+        padding: 0.625rem 1.25rem;
+        background-color: #B45309;
+        color: #FFFFFF;
+        font-weight: 700;
+        font-size: 0.875rem;
+        border: 1.5px solid #92400E;
+        border-radius: 0.75rem;
+        box-shadow: 0 3px 0 0 #78350F;
+        transition: transform 0.12s ease, background-color 0.12s ease, box-shadow 0.12s ease;
+    }
+    .btn-accent:hover {
+        background-color: #92400E;
+    }
+    .btn-accent:active {
+        transform: translateY(2px);
+        box-shadow: 0 1px 0 0 #78350F;
+    }
+
+    /* Secondary Button */
+    .btn-secondary {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.5rem;
+        min-height: 44px;
+        padding: 0.625rem 1.125rem;
+        background-color: #FFFFFF;
+        color: #1C2420;
+        font-weight: 600;
+        font-size: 0.875rem;
+        border: 1.5px solid #C9C0B1;
+        border-radius: 0.75rem;
+        box-shadow: 0 2px 0 0 #E4DDD0;
+        transition: transform 0.12s ease, background-color 0.12s ease, border-color 0.12s ease;
+    }
+    .btn-secondary:hover {
+        background-color: #F3EFE6;
+        border-color: #1B4D3E;
+    }
+    .btn-secondary:active {
+        transform: translateY(1px);
+    }
+
+    /* Danger Soft Button */
+    .btn-danger-soft {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.375rem;
+        min-height: 36px;
+        padding: 0.375rem 0.75rem;
+        background-color: #FEF2F2;
+        color: #991B1B;
+        font-weight: 600;
+        font-size: 0.8125rem;
+        border: 1.5px solid #FECACA;
+        border-radius: 0.625rem;
+        transition: background-color 0.12s ease, border-color 0.12s ease;
+    }
+    .btn-danger-soft:hover {
+        background-color: #FEE2E2;
+        border-color: #F87171;
+    }
+
+    /* Friendly Large Form Input */
+    .book-input {
+        width: 100%;
+        min-height: 44px;
+        padding: 0.625rem 0.875rem;
+        font-size: 0.9375rem;
+        color: #1C2420;
+        background-color: #FFFFFF;
+        border: 1.5px solid #C9C0B1;
+        border-radius: 0.75rem;
+        transition: border-color 0.15s ease, box-shadow 0.15s ease;
+    }
+    .book-input:focus {
+        border-color: #1B4D3E;
+        box-shadow: 0 0 0 3px rgba(27, 77, 62, 0.14);
+        outline: none;
+    }
+
+    .book-label {
+        display: block;
+        margin-bottom: 0.4rem;
+        font-size: 0.875rem;
+        font-weight: 700;
+        color: #1C2420;
+    }
+
+    .book-table {
+        width: 100%;
+        font-size: 0.875rem;
+        text-align: left;
+        color: #2E3A34;
+    }
+    .book-table thead {
+        background-color: #F3EFE6;
+        color: #1C2420;
+        font-size: 0.75rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.04em;
+        border-bottom: 1.5px solid #D6CFC2;
+    }
+    .book-table th {
+        padding: 0.875rem 1.125rem;
+    }
+    .book-table td {
+        padding: 0.9rem 1.125rem;
+        border-bottom: 1px solid #EAE4D8;
+    }
+    .book-table tbody tr:last-child td {
+        border-bottom: none;
+    }
+    .book-table tbody tr:hover {
+        background-color: #FAF7F2;
+    }
+}
+
+[x-cloak] {
+    display: none !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+    }
+}
